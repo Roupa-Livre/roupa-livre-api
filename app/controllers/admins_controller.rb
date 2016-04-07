@@ -4,7 +4,8 @@
 #
 #  id                     :integer          not null, primary key
 #  provider               :string           default("email"), not null
-#  uid                    :string           default(""), not null
+#  uid                    :string           not null
+#  type                   :string           not null
 #  encrypted_password     :string           default(""), not null
 #  reset_password_token   :string
 #  reset_password_sent_at :datetime
@@ -19,13 +20,14 @@
 #  confirmation_sent_at   :datetime
 #  unconfirmed_email      :string
 #  name                   :string
-#  nickname               :string
-#  image                  :string
 #  email                  :string
+#  nickname               :string
+#  social_image           :string
+#  image                  :string
+#  phone                  :string
 #  tokens                 :json
 #  created_at             :datetime
 #  updated_at             :datetime
-#  type                   :string
 #
 
 class AdminsController < ApplicationController

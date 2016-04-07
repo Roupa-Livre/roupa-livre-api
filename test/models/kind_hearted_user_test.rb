@@ -30,8 +30,10 @@
 #  updated_at             :datetime
 #
 
-require 'file_size_validator'
+require 'test_helper'
 
-class User < ActiveRecord::Base
-  
+class KindHeartedUserTest < ActiveSupport::TestCase
+  # test "the truth" do
+  #   assert true
+  # end
 end

@@ -6,7 +6,6 @@ gem 'rails-api'
 gem 'rack-cors'
 gem 'actionmailer'
 gem 'devise'
-gem 'omniauth'
 gem 'devise_token_auth'
 gem 'devise_invitable', '~> 1.3.4'
 gem 'carrierwave'
@@ -15,11 +14,22 @@ gem 'carrierwave_backgrounder'
 gem 'kaminari'
 gem 'api-pagination'
 gem 'tzinfo-data', platforms: [:mswin, :mingw, :jruby, :x64_mingw]
-group :database do
-group :postgresql do
-  gem 'pg'
-end
 
+#social
+gem 'omniauth'
+gem 'omniauth-facebook'
+gem 'omniauth-instagram'
+gem 'omniauth-twitter'
+gem 'omniauth-linkedin'
+gem 'omniauth-google-oauth2'
+# gem 'twitter'
+# gem 'instagram'
+# gem 'google-api-client', require: 'google/api_client'
+
+group :database do
+  group :postgresql do
+    gem 'pg'
+  end
 end
 
 group :workers do
