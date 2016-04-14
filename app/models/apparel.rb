@@ -15,6 +15,8 @@
 
 class Apparel < ActiveRecord::Base
   belongs_to :user
+
+  acts_as_mappable :through => :user
   
   has_many :apparel_images, dependent: :destroy
   has_many :apparel_tags, dependent: :destroy

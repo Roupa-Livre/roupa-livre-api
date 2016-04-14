@@ -5,7 +5,13 @@ Rails.application.routes.draw do
   resources :apparel_tags, except: [:new, :edit]
   resources :apparel_images, except: [:new, :edit]
   resources :apparels, except: [:new, :edit] do
-    get 'search'
+    member do
+      post 'like'
+      post 'dislike'
+    end
+    collection do
+      get 'search'
+    end
   end
   post 'users/update_image', to: "users#update_image"
 

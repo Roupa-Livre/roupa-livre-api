@@ -33,8 +33,6 @@
 #
 
 class KindHeartedUser < User
-  acts_as_mappable
-
   before_save :skip_confirmation!
   
   mount_uploader :image, UserImageUploader

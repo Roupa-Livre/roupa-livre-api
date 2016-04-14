@@ -14,7 +14,7 @@
 #
 
 class ApparelsController < ApplicationController
-  before_action :set_apparel, only: [:show, :update, :destroy]
+  before_action :set_apparel, only: [:show, :update, :destroy, :like, :dislike]
 
   # GET /apparels
   # GET /apparels.json
@@ -24,12 +24,35 @@ class ApparelsController < ApplicationController
     render json: @apparels
   end
 
-  # GET /apparels
-  # GET /apparels.json
+  # GET /apparels/search
+  # GET /apparels/search.json
   def search
-    @apparels = Apparel.all
+    @apparels = Apparel.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
+    @apparels = @apparels.joins(:user).by_distance(:origin => current_user)
 
-    render json: @apparels
+    render json: @apparels.as_json(include: { 
+      :apparel_images => { only: [:file] }, 
+      :apparel_tags => { only: [:name] },
+      :user => { only: [ :nickname ] }
+    })
+  end
+
+  def dislike
+    rate(false)
+  end
+
+  def like
+    rate(true)
+  end
+
+  def rate(liked)
+    apparel_rating = ApparelRating.find_or_create_by(user: current_user, apparel: @apparel) do |apparel_rating|
+      apparel_rating.liked = liked
+    end
+    apparel_rating.liked = liked
+    apparel_rating.save
+
+    search
   end
 
   # GET /apparels/1
