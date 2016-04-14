@@ -1,8 +1,17 @@
 module Overrides
-  class RegistrationsController < Devise::RegistrationsController
+  class RegistrationsController < DeviseTokenAuth::RegistrationsController
     
     before_filter :configure_sign_up_params, only: [:create]
     before_filter :configure_account_update_params, only: [:update]
+
+    def create
+      super do |resource|
+        # cria usando device id
+        if sign_up_params[:provider].present?
+          @resource.identities.create({ uid: @resource.uid, provider: @resource.provider })
+        end
+      end 
+    end
     
     def update_resource(resource, params)
       if resource.encrypted_password.blank? # || params[:password].blank?
@@ -23,11 +32,11 @@ module Overrides
     private
 
       def configure_sign_up_params
-        devise_parameter_sanitizer.for(:sign_up).push(:name)
+        devise_parameter_sanitizer.for(:sign_up).push(:name, :email, :type, :uid, :provider, :password, :password_confirmation)
       end
 
       def configure_account_update_params
-        devise_parameter_sanitizer.for(:account_update).push(:name)
+        devise_parameter_sanitizer.for(:account_update).push(:name, :lat, :lng)
       end
   end
 end

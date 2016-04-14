@@ -28,6 +28,8 @@
 #  tokens                 :json
 #  created_at             :datetime
 #  updated_at             :datetime
+#  lat                    :float
+#  lng                    :float
 #
 
 class AdminsController < ApplicationController

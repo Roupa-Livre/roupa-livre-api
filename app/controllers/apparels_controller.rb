@@ -24,6 +24,14 @@ class ApparelsController < ApplicationController
     render json: @apparels
   end
 
+  # GET /apparels
+  # GET /apparels.json
+  def search
+    @apparels = Apparel.all
+
+    render json: @apparels
+  end
+
   # GET /apparels/1
   # GET /apparels/1.json
   def show

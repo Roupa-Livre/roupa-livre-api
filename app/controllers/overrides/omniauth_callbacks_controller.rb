@@ -1,5 +1,5 @@
 module Overrides
-  class OmniauthCallbacksController < Devise::OmniauthCallbacksController   
+  class OmniauthCallbacksController < DeviseTokenAuth::OmniauthCallbacksController   
     def instagram
       generic_callback( 'instagram' )
     end

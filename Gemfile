@@ -15,6 +15,8 @@ gem 'kaminari'
 gem 'api-pagination'
 gem 'tzinfo-data', platforms: [:mswin, :mingw, :jruby, :x64_mingw]
 
+gem 'geokit-rails'
+
 #social
 gem 'omniauth'
 gem 'omniauth-facebook'

@@ -28,10 +28,18 @@
 #  tokens                 :json
 #  created_at             :datetime
 #  updated_at             :datetime
+#  lat                    :float
+#  lng                    :float
 #
 
 require 'file_size_validator'
 
 class User < ActiveRecord::Base
-  
+  include DeviseTokenAuth::Concerns::User
+  # Include default devise modules.
+  devise :database_authenticatable, :registerable,
+          :recoverable, :rememberable, :trackable,
+          :confirmable, :omniauthable
+
+  has_many :identities, dependent: :destroy
 end

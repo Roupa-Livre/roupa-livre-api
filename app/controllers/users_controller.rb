@@ -28,10 +28,16 @@
 #  tokens                 :json
 #  created_at             :datetime
 #  updated_at             :datetime
+#  lat                    :float
+#  lng                    :float
 #
 
 class UsersController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:register_devise]
+
+  def register_devise
+    
+  end
 
   def update_image
     current_user.update(update_image_params)

@@ -15,4 +15,7 @@
 
 class Apparel < ActiveRecord::Base
   belongs_to :user
+  
+  has_many :apparel_images, dependent: :destroy
+  has_many :apparel_tags, dependent: :destroy
 end

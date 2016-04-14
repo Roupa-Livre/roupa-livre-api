@@ -4,7 +4,7 @@
 #
 #  id         :integer          not null, primary key
 #  apparel_id :integer          not null
-#  file       :string           not null
+#  file       :text             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

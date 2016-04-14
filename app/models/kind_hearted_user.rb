@@ -28,15 +28,12 @@
 #  tokens                 :json
 #  created_at             :datetime
 #  updated_at             :datetime
+#  lat                    :float
+#  lng                    :float
 #
 
 class KindHeartedUser < User
-  # Include default devise modules.
-  devise :database_authenticatable, :registerable,
-          :recoverable, :rememberable, :trackable,
-          :confirmable, :omniauthable
-  
-  include DeviseTokenAuth::Concerns::User
+  acts_as_mappable
 
   before_save :skip_confirmation!
   
