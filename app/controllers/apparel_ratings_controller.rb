@@ -31,6 +31,7 @@ class ApparelRatingsController < ApplicationController
   # POST /apparel_ratings.json
   def create
     @apparel_rating = ApparelRating.new(apparel_rating_params)
+    @apparel_rating.user = current_user
 
     if @apparel_rating.save
       render json: @apparel_rating, status: :created, location: @apparel_rating

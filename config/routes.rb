@@ -5,10 +5,6 @@ Rails.application.routes.draw do
   resources :apparel_tags, except: [:new, :edit]
   resources :apparel_images, except: [:new, :edit]
   resources :apparels, except: [:new, :edit] do
-    member do
-      post 'like'
-      post 'dislike'
-    end
     collection do
       get 'search'
     end

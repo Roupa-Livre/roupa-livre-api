@@ -37,24 +37,6 @@ class ApparelsController < ApplicationController
     })
   end
 
-  def dislike
-    rate(false)
-  end
-
-  def like
-    rate(true)
-  end
-
-  def rate(liked)
-    apparel_rating = ApparelRating.find_or_create_by(user: current_user, apparel: @apparel) do |apparel_rating|
-      apparel_rating.liked = liked
-    end
-    apparel_rating.liked = liked
-    apparel_rating.save
-
-    search
-  end
-
   # GET /apparels/1
   # GET /apparels/1.json
   def show
