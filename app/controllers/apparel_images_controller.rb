@@ -65,6 +65,6 @@ class ApparelImagesController < ApplicationController
     end
 
     def apparel_image_params
-      params.require(:apparel_image).permit(:apparel_id, :image)
+      params.require(:apparel_image).permit(:apparel_id, :image, :image_cache)
     end
 end

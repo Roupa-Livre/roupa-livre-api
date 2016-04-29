@@ -14,6 +14,7 @@
 #
 
 class ApparelsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_apparel, only: [:show, :update, :destroy, :like, :dislike]
 
   # GET /apparels
@@ -30,11 +31,7 @@ class ApparelsController < ApplicationController
     @apparels = Apparel.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
     @apparels = @apparels.joins(:user).by_distance(:origin => current_user)
 
-    render json: @apparels.as_json(include: { 
-      :apparel_images => { only: [:file] }, 
-      :apparel_tags => { only: [:name] },
-      :user => { only: [ :nickname ] }
-    })
+    render json: @apparels
   end
 
   # GET /apparels/1
@@ -46,12 +43,14 @@ class ApparelsController < ApplicationController
   # POST /apparels
   # POST /apparels.json
   def create
-    @apparel = Apparel.new(apparel_params)
-
-    if @apparel.save
-      render json: @apparel, status: :created, location: @apparel
-    else
-      render json: @apparel.errors, status: :unprocessable_entity
+    load_new_apparel_images(apparel_params) do |final_params|
+      @apparel = Apparel.new(final_params)
+      @apparel.user = current_user
+      if @apparel.save
+        render json: @apparel, status: :created, location: @apparel
+      else
+        render json: @apparel.errors, status: :unprocessable_entity
+      end
     end
   end
 
@@ -60,10 +59,12 @@ class ApparelsController < ApplicationController
   def update
     @apparel = Apparel.find(params[:id])
 
-    if @apparel.update(apparel_params)
-      head :no_content
-    else
-      render json: @apparel.errors, status: :unprocessable_entity
+    load_new_apparel_images(apparel_params) do |final_params|
+      if @apparel.update(final_params)
+        head :no_content
+      else
+        render json: @apparel.errors, status: :unprocessable_entity
+      end
     end
   end
 
@@ -82,6 +83,8 @@ class ApparelsController < ApplicationController
     end
 
     def apparel_params
-      params.require(:apparel).permit(:user_id, :title, :description, :size_info, :gender, :age_info)
+      params.require(:apparel).permit(:title, :description, :size_info, :gender, :age_info, 
+        apparel_tags_attributes: [:id, :name, :_destroy], 
+        apparel_images_attributes: [:id, :data, :file, :file_cache, :_destroy])
     end
 end

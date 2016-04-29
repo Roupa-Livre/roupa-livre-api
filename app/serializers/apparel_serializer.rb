@@ -13,14 +13,9 @@
 #  updated_at  :datetime         not null
 #
 
-class Apparel < ActiveRecord::Base
-  belongs_to :user
+class ApparelSerializer < ActiveModel::Serializer
+  attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info
 
-  acts_as_mappable :through => :user
-  
-  has_many :apparel_images, dependent: :destroy
-  accepts_nested_attributes_for :apparel_images, :allow_destroy => true
-  
-  has_many :apparel_tags, dependent: :destroy
-  accepts_nested_attributes_for :apparel_tags, :allow_destroy => true
+  has_many :apparel_tags
+  has_many :apparel_images
 end
