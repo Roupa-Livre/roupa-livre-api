@@ -25,6 +25,14 @@ class ApparelsController < ApplicationController
     render json: @apparels
   end
 
+  # GET /apparels
+  # GET /apparels/owned.json
+  def owned
+    @apparels = Apparel.where(user: current_user)
+
+    render json: @apparels
+  end
+
   # GET /apparels/search
   # GET /apparels/search.json
   def search

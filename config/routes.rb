@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :apparels, except: [:new, :edit] do
     collection do
       get 'search'
+      get 'owned'
     end
   end
   post 'users/update_image', to: "users#update_image"
