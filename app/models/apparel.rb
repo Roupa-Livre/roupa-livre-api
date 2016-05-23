@@ -18,7 +18,7 @@ class Apparel < ActiveRecord::Base
 
   acts_as_mappable :through => :user
   
-  has_many :apparel_images, dependent: :destroy
+  has_many :apparel_images, -> { order('sort_order ASC') }, dependent: :destroy
   accepts_nested_attributes_for :apparel_images, :allow_destroy => true
   
   has_many :apparel_tags, dependent: :destroy
