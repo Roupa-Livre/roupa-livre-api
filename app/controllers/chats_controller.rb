@@ -20,16 +20,28 @@ class ChatsController < ApplicationController
   # GET /chats
   # GET /chats.json
   def index
-    @chats = Chat.all
+    @chats = Chat.where('user_1_id = ? or user_2_id = ?', current_user.id, current_user.id)
 
-    render json: @chats
+    if params[:last_read].present?
+      render json: @chats, last_read: params[:last_read].to_time
+    else
+      render json: @chats
+    end
   end
 
   # GET /chats/active_by_user/1
   # GET /chats/active_by_user/1.json
   def active_by_user
     @chat = Chat.active_by_user(current_user, User.find(params[:id]))
-    render json: @chat
+    if params[:last_read].present? && params[:include_messages].present?
+      render json: @chat, include_messages: params[:include_messages], last_read: params[:last_read].to_time
+    elsif params[:last_read].present?
+      render json: @chats, last_read: params[:last_read].to_time
+    elsif params[:include_messages].present?
+      render json: @chat, include_messages: params[:include_messages]
+    else
+      render json: @chat
+    end
   end
 
   # GET /chats/1

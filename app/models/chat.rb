@@ -19,10 +19,12 @@ class Chat < ActiveRecord::Base
 
   validates_presence_of :user_1, :user_2
   validates_uniqueness_of :user_1, :scope => :user_2
+  
+  has_many :chat_messages, -> { order('created_at DESC') }, dependent: :destroy
 
   def self.active_by_user(user1, user2)
-    chat = Chat.find_by(user_1: user1, user_2: user2)
-    chat = Chat.find_by(user_1: user2, user_2: user1) unless chat
+    chat = Chat.find_by(user_1: user1, user_2: user2, closed: [nil, false])
+    chat = Chat.find_by(user_1: user2, user_2: user1, closed: [nil, false]) unless chat
     chat
   end
 
