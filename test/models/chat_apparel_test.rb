@@ -1,18 +1,17 @@
 # == Schema Information
 #
-# Table name: apparel_images
+# Table name: chat_apparels
 #
 #  id         :integer          not null, primary key
-#  apparel_id :integer          not null
-#  file       :text             not null
+#  chat_id    :integer
+#  apparel_id :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  sort_order :integer
 #
 
 require 'test_helper'
 
-class ApparelImageTest < ActiveSupport::TestCase
+class ChatApparelTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

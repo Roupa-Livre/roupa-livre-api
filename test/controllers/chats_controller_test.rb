@@ -9,6 +9,8 @@
 #  user_2_accepted :boolean
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  closed          :boolean
+#  closed_at       :datetime
 #
 
 require 'test_helper'

@@ -9,9 +9,12 @@
 #  user_2_accepted :boolean
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  closed          :boolean
+#  closed_at       :datetime
 #
 
 class ChatsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_chat, only: [:show, :update, :destroy]
 
   # GET /chats
@@ -20,6 +23,13 @@ class ChatsController < ApplicationController
     @chats = Chat.all
 
     render json: @chats
+  end
+
+  # GET /chats/active_by_user/1
+  # GET /chats/active_by_user/1.json
+  def active_by_user
+    @chat = Chat.active_by_user(current_user, User.find(params[:id]))
+    render json: @chat
   end
 
   # GET /chats/1

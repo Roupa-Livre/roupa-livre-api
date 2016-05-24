@@ -9,6 +9,8 @@
 #  user_2_accepted :boolean
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  closed          :boolean
+#  closed_at       :datetime
 #
 
 class Chat < ActiveRecord::Base
@@ -17,4 +19,18 @@ class Chat < ActiveRecord::Base
 
   validates_presence_of :user_1, :user_2
   validates_uniqueness_of :user_1, :scope => :user_2
+
+  def self.active_by_user(user1, user2)
+    chat = Chat.find_by(user_1: user1, user_2: user2)
+    chat = Chat.find_by(user_1: user2, user_2: user1) unless chat
+    chat
+  end
+
+  def self.find_or_create_chat(user1, user2)
+    chat = Chat.active_by_user(user1, user2)
+    if !chat
+      chat = Chat.create(user_1: user1, user_2: user2, user_1_accepted: false, user_2_accepted: false)
+      # Cria ou não 
+    end
+  end
 end

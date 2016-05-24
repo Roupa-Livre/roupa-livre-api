@@ -20,14 +20,6 @@ class ApparelsController < ApplicationController
   # GET /apparels
   # GET /apparels.json
   def index
-    @apparels = Apparel.all
-
-    render json: @apparels
-  end
-
-  # GET /apparels
-  # GET /apparels/owned.json
-  def owned
     @apparels = Apparel.where(user: current_user)
 
     render json: @apparels

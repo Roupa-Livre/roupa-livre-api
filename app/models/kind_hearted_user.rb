@@ -38,6 +38,12 @@ class KindHeartedUser < User
   mount_uploader :image, UserImageUploader
   validates :image, allow_blank: true, file_size: { maximum: 3.megabytes.to_i,  message: "O arquivo enviado é muito grande. Tamanho máximo 3 MB."}
 
+  has_many :apparels, dependent: :destroy
+  accepts_nested_attributes_for :apparels, :allow_destroy => true
+
+  has_many :apparel_ratings, dependent: :destroy
+  accepts_nested_attributes_for :apparel_ratings, :allow_destroy => true
+
   # def twitter
   #   identities.where( :provider => "twitter" ).first
   # end
