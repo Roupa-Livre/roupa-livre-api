@@ -44,4 +44,12 @@ class User < ActiveRecord::Base
   acts_as_mappable
 
   has_many :identities, dependent: :destroy
+
+  def masked_email
+    if self.email && self.email.length > 5
+      self.email[0..4] + ("*" * (self.email.length - 5))
+    else
+      nil
+    end
+  end
 end
