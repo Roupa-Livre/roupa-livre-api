@@ -21,7 +21,7 @@ class ApparelsController < ApplicationController
   # GET /apparels.json
   def index
     @apparels = Apparel.where.not(user: current_user)
-    @apparels = Apparel.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
+    @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
     @apparels = @apparels.joins(:user).by_distance(:origin => current_user)
 
     render json: @apparels

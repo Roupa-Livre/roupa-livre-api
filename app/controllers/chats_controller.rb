@@ -2,15 +2,17 @@
 #
 # Table name: chats
 #
-#  id              :integer          not null, primary key
-#  user_1_id       :integer          not null
-#  user_2_id       :integer          not null
-#  user_1_accepted :boolean
-#  user_2_accepted :boolean
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  closed          :boolean
-#  closed_at       :datetime
+#  id                  :integer          not null, primary key
+#  user_1_id           :integer          not null
+#  user_2_id           :integer          not null
+#  user_1_accepted     :boolean
+#  user_2_accepted     :boolean
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  closed              :boolean
+#  closed_at           :datetime
+#  user_1_last_read_at :datetime
+#  user_2_last_read_at :datetime
 #
 
 class ChatsController < ApplicationController
@@ -22,32 +24,29 @@ class ChatsController < ApplicationController
   def index
     @chats = Chat.where('user_1_id = ? or user_2_id = ?', current_user.id, current_user.id)
 
-    if params[:last_read].present?
-      render json: @chats, last_read: params[:last_read].to_time
-    else
-      render json: @chats
-    end
+    render json: @chats
   end
 
   # GET /chats/active_by_user/1
   # GET /chats/active_by_user/1.json
   def active_by_user
     @chat = Chat.active_by_user(current_user, User.find(params[:id]))
-    if params[:last_read].present? && params[:include_messages].present?
-      render json: @chat, include_messages: params[:include_messages], last_read: params[:last_read].to_time
-    elsif params[:last_read].present?
-      render json: @chats, last_read: params[:last_read].to_time
-    elsif params[:include_messages].present?
-      render json: @chat, include_messages: params[:include_messages]
+    if @chat
+      show
     else
-      render json: @chat
+      render status: :not_found
     end
   end
 
   # GET /chats/1
   # GET /chats/1.json
   def show
-    render json: @chat
+    if params[:include_messages].present? && to_boolean(params[:include_messages])
+      chat.mark_as_read(current_user)
+      render json: @chat, include_messages: true
+    else
+      render json: @chat
+    end
   end
 
   # POST /chats

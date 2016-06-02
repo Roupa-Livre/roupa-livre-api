@@ -2,20 +2,22 @@
 #
 # Table name: chats
 #
-#  id              :integer          not null, primary key
-#  user_1_id       :integer          not null
-#  user_2_id       :integer          not null
-#  user_1_accepted :boolean
-#  user_2_accepted :boolean
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  closed          :boolean
-#  closed_at       :datetime
+#  id                  :integer          not null, primary key
+#  user_1_id           :integer          not null
+#  user_2_id           :integer          not null
+#  user_1_accepted     :boolean
+#  user_2_accepted     :boolean
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  closed              :boolean
+#  closed_at           :datetime
+#  user_1_last_read_at :datetime
+#  user_2_last_read_at :datetime
 #
 
 class Chat < ActiveRecord::Base
-  has_one :user_1, :foreign_key => "user_2_id", :class_name => "User"
-  has_one :user_2, :foreign_key => "user_2_id", :class_name => "User"
+  belongs_to :user_1, :class_name => "User"
+  belongs_to :user_2, :class_name => "User"
 
   validates_presence_of :user_1, :user_2
   validates_uniqueness_of :user_1, :scope => :user_2
@@ -28,11 +30,32 @@ class Chat < ActiveRecord::Base
     chat
   end
 
+  def mark_as_read(user)
+    self.user_1_last_read_at = Time.now if user.id == user_1_id
+    self.user_2_last_read_at = Time.now if user.id == user_2_id
+    self.save
+  end
+
+  def last_read_date(user)
+    if user.id == user_1_id && user_1_last_read_at
+      user_1_last_read_at
+    elsif user.id == user_2_id && user_2_last_read_at
+      user_2_last_read_at
+    else
+      nil
+    end
+  end
+
+  def get_last_messages(previous_read_at)
+    self.chat_messages.where('created_at > ?', previous_read_at) if previous_read_at
+    self.chat_messages.limit(10)
+  end
+
   def self.find_or_create_chat(user1, user2)
     chat = Chat.active_by_user(user1, user2)
     if !chat
       chat = Chat.create(user_1: user1, user_2: user2, user_1_accepted: false, user_2_accepted: false)
-      # Cria ou não 
     end
+    chat
   end
 end
