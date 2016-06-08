@@ -46,10 +46,21 @@ class Chat < ActiveRecord::Base
     end
   end
 
-  def get_last_messages(previous_read_at)
-    self.chat_messages.where('created_at > ?', previous_read_at) if previous_read_at
-    self.chat_messages.limit(10)
+  def is_owner(user)
+    user.id == user_1_id || user.id == user_2_id
   end
+
+  def get_last_messages(previous_read_at)
+    messages = self.chat_messages
+    messages = messages.where('created_at > ?', previous_read_at) if previous_read_at
+    messages = messages.limit(20) if !previous_read_at
+    messages
+  end
+
+  def previous_messages(previous_message_id)
+    self.chat_messages.where('id < ?', previous_message_id)
+  end
+
 
   def self.find_or_create_chat(user1, user2)
     chat = Chat.active_by_user(user1, user2)

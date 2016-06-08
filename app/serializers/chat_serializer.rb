@@ -16,7 +16,7 @@
 #
 
 class ChatSerializer < ActiveModel::Serializer
-  attributes :id, :user_1_accepted, :user_2_accepted, :name, :last_read_at, :others_last_read_at, :unread_messages_count, :last_message_sent_at
+  attributes :id, :user_1_accepted, :user_2_accepted, :name, :last_read_at, :others_last_read_at, :unread_messages_count, :total_messages_count, :last_message_sent_at
 
   has_many :user_1
   has_many :user_2
@@ -64,6 +64,10 @@ class ChatSerializer < ActiveModel::Serializer
 
   def unread_messages_count
     object.get_last_messages(object.last_read_date(current_user)).length
+  end
+
+  def total_messages_count
+    object.chat_messages.length
   end
 
   def last_message_sent_at
