@@ -4,6 +4,18 @@ class ApplicationController < ActionController::API
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
+
+    def set_user_by_token(mapping=nil)
+      result = super(mapping)
+      if result
+        puts "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+        data = { type: 'refresh_token', token: @token, user: @resource.id }.to_json
+        puts data
+        REDIS.publish 'refresh_token', data
+      end
+      result
+    end
+
     def to_boolean(str)
       str == 'true' || str == "1"
     end

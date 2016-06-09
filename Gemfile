@@ -18,6 +18,12 @@ gem 'tzinfo-data', platforms: [:mswin, :mingw, :jruby, :x64_mingw]
 
 gem 'geokit-rails'
 
+# workers
+gem 'puma'
+gem 'realtime'
+gem 'redis'
+gem 'redis-namespace'
+
 #social
 gem 'omniauth'
 gem 'omniauth-facebook'
@@ -33,12 +39,6 @@ group :database do
   group :postgresql do
     gem 'pg'
   end
-end
-
-group :workers do
-  gem 'sidekiq', '~> 3.2.6'
-  gem 'redis'
-  gem 'redis-namespace'
 end
 
 group :android do
