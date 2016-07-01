@@ -16,7 +16,7 @@
 #
 
 class ChatSerializer < ActiveModel::Serializer
-  attributes :id, :user_1_accepted, :user_2_accepted, :name, :last_read_at, :others_last_read_at, :unread_messages_count, :total_messages_count, :last_message_sent_at
+  attributes :id, :user_1_accepted, :user_2_accepted, :other_user, :name, :last_read_at, :others_last_read_at, :unread_messages_count, :total_messages_count, :last_message_sent_at
 
   has_many :user_1
   has_many :user_2
@@ -26,6 +26,16 @@ class ChatSerializer < ActiveModel::Serializer
   #   data[:messages] = messages if @options[:include_messages].present? && @options[:include_messages]
   #   data
   # end
+
+  def other_user
+    if object.user_1_id == current_user.id
+      object.user_2 
+    elsif object.user_2_id == current_user.id
+      object.user_1
+    else
+      nil
+    end
+  end
 
   def last_read_at
     if object.user_1_id == current_user.id

@@ -16,6 +16,12 @@ module Overrides
       generic_callback( 'google_oauth2' )
     end
 
+    def get_resource_from_auth_hash
+      super
+
+      @resource.type = 'KindHeartedUser'
+    end
+
     def generic_callback( provider )
       @identity = Identity.find_for_oauth env["omniauth.auth"]
 
@@ -26,7 +32,8 @@ module Overrides
           social_image: @identity.image, 
           name: @identity.name, 
           phone: @identity.phone, 
-          nickname: @identity.nickname
+          nickname: @identity.nickname,
+          type: 'KindHeartedUser'
         }
         if @user.nil?
           @user = KindHeartedUser.create( new_params )
