@@ -46,10 +46,31 @@ class User < ActiveRecord::Base
   has_many :identities, dependent: :destroy
 
   def masked_email
-    if self.email && self.email.length > 5
-      self.email[0..4] + ("*" * (self.email.length - 5))
+    if email && email.length > 5
+      email[0..4] + ("*" * (email.length - 5))
     else
       nil
     end
+  end
+
+  def first_name
+    if name && name.length > 1 # pelo menos 2 letras
+      names_separator_index = name.index(' ')
+      if names_separator_index > -1
+        if names_separator_index > 1 # pelo menos 2 letras
+          name[0..(names_separator_index-1)]
+        else
+          nil
+        end
+      else
+        name
+      end
+    else
+      nil
+    end
+  end
+
+  def public_name
+    nickname || first_name || masked_email
   end
 end

@@ -16,61 +16,79 @@
 #
 
 class ChatSerializer < ActiveModel::Serializer
-  attributes :id, :user_1_accepted, :user_2_accepted, :other_user, :name, :last_read_at, :others_last_read_at, :unread_messages_count, :total_messages_count, :last_message_sent_at
+  attributes :id, :user_1_id, :user_2_id, :user_1_accepted, :user_2_accepted, :name, :last_read_at
+  attributes :other_user, :others_last_read_at
+  attributes :other_user_apparel_images, :owned_apparel_images
+  attributes :unread_messages_count, :total_messages_count, :last_message_sent_at
 
-  has_many :user_1
-  has_many :user_2
+  # def initialize(object, options = {})
+  #   super(object, options = {})
 
-  # def attributes(*args)
-  #   data = super
-  #   data[:messages] = messages if @options[:include_messages].present? && @options[:include_messages]
-  #   data
+  #   @current_user_last_read = nil
+  #   @other_last_read = nil
+  #   @other_user = nil
   # end
 
+  def init_users
+    @current_user_last_read = nil
+    @other_last_read = nil
+    @other_user = nil
+
+    # if current_user
+      if object.user_1_id == current_user.id
+        @current_user_last_read = object.user_1_last_read_at
+        @other_last_read = object.user_2_last_read_at
+        @other_user = object.user_2
+      elsif object.user_2_id == current_user.id
+        @current_user_last_read = object.user_2_last_read_at
+        @other_last_read = object.user_1_last_read_at
+        @other_user = object.user_1
+      end      
+    # end
+  end
+
+  def get_other_user
+    init_users
+    @other_user
+  end
+
+  def get_current_user_last_read
+    init_users
+    @current_user_last_read
+  end
+
+  def get_other_last_read
+    init_users
+    @other_last_read
+  end
+
   def other_user
-    if object.user_1_id == current_user.id
-      object.user_2 
-    elsif object.user_2_id == current_user.id
-      object.user_1
-    else
-      nil
-    end
+    @other_user || get_other_user
   end
 
   def last_read_at
-    if object.user_1_id == current_user.id
-      object.user_1_last_read_at 
-    elsif object.user_2_id == current_user.id
-      object.user_2_last_read_at 
-    else
-      nil
-    end
-  end
-
-  def name
-    if object.user_1_id == current_user.id
-      object.user_2.nickname || object.user_2.masked_email 
-    elsif object.user_2_id == current_user.id
-      object.user_1.nickname || object.user_1.masked_email
-    else
-      (object.user_2.nickname || object.user_2.masked_email) + ' - ' + (object.user_1.nickname || object.user_1.masked_email)
-    end
+    @current_user_last_read || get_current_user_last_read
   end
 
   def others_last_read_at
-    if object.user_1_id != current_user.id
-      object.user_1_last_read_at 
-    elsif object.user_2_id != current_user.id
-      object.user_2_last_read_at 
+    @other_last_read || get_other_last_read
+  end
+
+  def name
+    if other_user
+      @other_user.public_name
     else
-      nil
+      object.user_2.public_name + ' - ' + object.user_1.public_name
     end
   end
 
-  # def messages
-  #   @messages ||= object.get_last_messages(object.max_last_read_date(scope.current_user))
-  #   @messages
-  # end
+  def other_user_apparel_images
+    object.user_apparels(other_user).map { |apparel| apparel.apparel_images.first  } if @other_user
+  end
+
+  def owned_apparel_images
+    object.user_apparels(current_user).map { |apparel| apparel.apparel_images.first  } if current_user
+  end
 
   def unread_messages_count
     object.get_last_messages(object.last_read_date(current_user)).length

@@ -23,11 +23,17 @@ class Chat < ActiveRecord::Base
   validates_uniqueness_of :user_1, :scope => :user_2
   
   has_many :chat_messages, -> { order('created_at DESC') }, dependent: :destroy
+  has_many :chat_apparels, dependent: :destroy
+  has_many :apparels, through: :chat_apparels
 
   def self.active_by_user(user1, user2)
     chat = Chat.find_by(user_1: user1, user_2: user2, closed: [nil, false])
     chat = Chat.find_by(user_1: user2, user_2: user1, closed: [nil, false]) unless chat
     chat
+  end
+
+  def user_apparels(user)
+    apparels.where(user: user)
   end
 
   def mark_as_read(user)
@@ -61,12 +67,22 @@ class Chat < ActiveRecord::Base
     self.chat_messages.where('id < ?', previous_message_id)
   end
 
+  def create_chat_apparels
+    ApparelRating.where(user: user_1, liked: true, apparel: user_2.apparels).each do |rating|
+      self.chat_apparels.find_or_create_by(chat: self, apparel: rating.apparel)
+    end
+    ApparelRating.where(user: user_2, liked: true, apparel: user_1.apparels).each do |rating|
+      self.chat_apparels.find_or_create_by(chat: self, apparel: rating.apparel)
+    end
+  end
+
 
   def self.find_or_create_chat(user1, user2)
     chat = Chat.active_by_user(user1, user2)
     if !chat
       chat = Chat.create(user_1: user1, user_2: user2, user_1_accepted: false, user_2_accepted: false)
     end
+    chat.create_chat_apparels
     chat
   end
 end
