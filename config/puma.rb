@@ -2,12 +2,12 @@ threads ENV['PUMA_MIN_THREADS'] || 8, ENV['PUMA_MAX_THREADS'] || 16
 workers ENV['PUMA_WORKERS'] || 1
 preload_app!
 
-on_worker_boot do
+rackup      DefaultRackup
+port        ENV['PORT']     || 3000
+environment ENV['RACK_ENV'] || 'development'
 
-  ActiveSupport.on_load(:active_record) do
-    config = Rails.application.config.database_configuration[Rails.env]
-    config['reaping_frequency'] = ENV['DB_REAP_FREQ'] || 10 # seconds
-    config['pool']              = ENV['DB_POOL'] || 16
-    ActiveRecord::Base.establish_connection(config)
-  end
+on_worker_boot do
+  # Worker specific setup for Rails 4.1+
+  # See: https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#on-worker-boot
+  ActiveRecord::Base.establish_connection
 end
