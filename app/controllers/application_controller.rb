@@ -8,9 +8,7 @@ class ApplicationController < ActionController::API
     def set_user_by_token(mapping=nil)
       result = super(mapping)
       if result
-        puts "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
         data = { type: 'refresh_token', token: @token, user: @resource.id }.to_json
-        puts data
         REDIS.publish 'refresh_token', data
       end
       result
