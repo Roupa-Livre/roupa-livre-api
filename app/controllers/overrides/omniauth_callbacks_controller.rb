@@ -1,5 +1,13 @@
 module Overrides
   class OmniauthCallbacksController < DeviseTokenAuth::OmniauthCallbacksController   
+    def omniauth_success
+      super
+
+      if @identity
+        @identity.user = @resource
+        @identity.save!
+      end
+    end
     def assign_provider_attrs(user, auth_hash)
       user.assign_attributes({
         name: auth_hash.info.name, 
@@ -17,8 +25,6 @@ module Overrides
         provider: @identity.provider,
         uid: (@identity.uid || @identity.email)
       })
-      @identity.user = @resource
-      @identity.save!
       
       if @resource.new_record?
         @oauth_registration = true
