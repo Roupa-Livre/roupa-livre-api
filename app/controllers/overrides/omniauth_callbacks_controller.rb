@@ -18,6 +18,7 @@ module Overrides
         uid: (@identity.uid || @identity.email)
       })
       @identity.user = @resource
+      @identity.save!
       
       if @resource.new_record?
         @oauth_registration = true
@@ -30,10 +31,6 @@ module Overrides
       # assign any additional (whitelisted) attributes
       extra_params = whitelisted_params
       @resource.assign_attributes(extra_params) if extra_params
-
-      if @resource.persisted?
-        @identity.save!
-      end
 
       @resource
     end
