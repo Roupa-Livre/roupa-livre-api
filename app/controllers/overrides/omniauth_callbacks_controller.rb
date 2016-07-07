@@ -12,8 +12,11 @@ module Overrides
     def get_resource_from_auth_hash
       @identity = Identity.find_for_oauth auth_hash
 
+      logger.debug auth_hash.to_json
+      logger.debug @identity.to_json if @identity
       @resource = @identity.user || current_user || KindHeartedUser.new({
         email: (@identity.email || ""),
+        provider: @identity.provider,
         uid: (@identity.uid || @identity.email)
       })
       @identity.user = @resource
