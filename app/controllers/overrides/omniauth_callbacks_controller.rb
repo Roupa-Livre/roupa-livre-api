@@ -12,9 +12,6 @@ module Overrides
     def get_resource_from_auth_hash
       @identity = Identity.find_for_oauth auth_hash
 
-      puts "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-      puts auth_hash.to_json
-      puts @identity.to_json if @identity
       @resource = @identity.user || current_user || KindHeartedUser.new({
         email: (@identity.email || ""),
         provider: @identity.provider,
@@ -35,7 +32,7 @@ module Overrides
       @resource.assign_attributes(extra_params) if extra_params
 
       if @resource.persisted?
-        @identity.update_attribute( :user_id, @resource.id )
+        @identity.save!
       end
 
       @resource

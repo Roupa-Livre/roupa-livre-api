@@ -25,7 +25,8 @@ class Identity < ActiveRecord::Base
   validates_uniqueness_of :user, :scope => :provider
 
   def self.find_for_oauth(auth)
-    identity = Identity.find_or_create_by(provider: auth.provider, uid: auth.uid)
+    identity = Identity.find_by(provider: auth.provider, uid: auth.uid)
+    identity = Identity.new({ uid: auth.uid, provider: auth.provider }) if identity.nil?
     if auth.credentials
       identity.accesstoken = auth.credentials.token
       identity.refreshtoken = auth.credentials.refresh_token
@@ -36,7 +37,6 @@ class Identity < ActiveRecord::Base
     identity.image = auth.info.image
     identity.phone = auth.info.phone
     identity.urls = (auth.info.urls || "").to_json
-    identity.save!
     identity
   end
 end
