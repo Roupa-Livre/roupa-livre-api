@@ -18,4 +18,12 @@ class ApparelSerializer < ActiveModel::Serializer
 
   has_many :apparel_tags
   has_many :apparel_images
+
+  belongs_to :user
+
+  def attributes(*args)
+    data = super
+    data[:distance] = current_user.km_from_user(object.user) if current_user && current_user.id != object.user_id
+    data
+  end
 end

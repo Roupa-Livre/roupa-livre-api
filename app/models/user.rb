@@ -45,6 +45,10 @@ class User < ActiveRecord::Base
 
   has_many :identities, dependent: :destroy
 
+  def km_from_user(other_user)
+    self.distance_from(other_user, :units => :kms) if other_user.lat && other_user.lng
+  end
+
   def masked_email
     if email && email.length > 5
       email[0..4] + ("*" * (email.length - 5))
