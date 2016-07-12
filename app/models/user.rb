@@ -91,6 +91,5 @@ class User < ActiveRecord::Base
         end
       end
     end
-    result
   end
 end
