@@ -45,8 +45,6 @@ class User < ActiveRecord::Base
 
   has_many :identities, dependent: :destroy
 
-  after_save :publish_token_change
-
   def km_from_user(other_user)
     self.distance_from(other_user, :units => :kms) if other_user.lat && other_user.lng
   end
@@ -80,16 +78,12 @@ class User < ActiveRecord::Base
     nickname || first_name || masked_email
   end
 
-  def publish_token_change
-    if tokens_changed?
-      current_tokens = self.tokens
-      if current_tokens.length > 0
-        latest_token = self.tokens.max_by { |cid, v| v[:expiry] || v["expiry"] }
-        if latest_token
-          data = { type: 'refresh_token', token: latest_token, user: self.id }.to_json
-          REDIS.publish 'refresh_token', data
-        end
-      end
-    end
+  def build_auth_header(token, client_id='default')
+    result = super (token, client_id)
+
+    data = { type: 'refresh_token', token: token, user: self.id }.to_json
+    REDIS.publish 'refresh_token', data
+
+    return result
   end
 end
