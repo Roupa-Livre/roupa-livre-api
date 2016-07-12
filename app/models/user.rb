@@ -45,7 +45,7 @@ class User < ActiveRecord::Base
 
   has_many :identities, dependent: :destroy
 
-  after_save
+  after_save :publish_token_change
 
   def km_from_user(other_user)
     self.distance_from(other_user, :units => :kms) if other_user.lat && other_user.lng
