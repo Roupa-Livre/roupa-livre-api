@@ -16,7 +16,16 @@ class ChatMessage < ActiveRecord::Base
 
   validates_presence_of :chat, :user, :message
 
+  after_create :publish_to_realtime
+
   def is_owner(user)
     user.id == user_id
+  end
+
+  def publish_to_realtime
+    if REDIS
+      data = { type: 'message', message: self }.to_json
+      REDIS.publish 'realtime_msg', data
+    end
   end
 end
