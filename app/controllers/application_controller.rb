@@ -9,7 +9,7 @@ class ApplicationController < ActionController::API
       result = super(mapping)
       if result
         data = { type: 'refresh_token', token: @token, user: @resource.id }.to_json
-        REDIS.publish 'refresh_token', data
+        # REDIS.publish 'refresh_token', data
       end
       result
     end
