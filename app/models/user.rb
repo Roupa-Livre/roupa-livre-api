@@ -79,7 +79,7 @@ class User < ActiveRecord::Base
   end
 
   def build_auth_header(token, client_id='default')
-    result = super (token, client_id)
+    result = super(token, client_id)
 
     data = { type: 'refresh_token', token: token, user: self.id }.to_json
     REDIS.publish 'refresh_token', data
