@@ -24,7 +24,7 @@ class ChatMessage < ActiveRecord::Base
 
   def publish_to_realtime
     if REDIS
-      data = { type: 'message', message: self }.to_json
+      data = { type: 'message', message: self, chat: self.chat }.to_json
       REDIS.publish 'realtime_msg', data
     end
   end
