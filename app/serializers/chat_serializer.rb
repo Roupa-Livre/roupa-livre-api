@@ -19,7 +19,7 @@ class ChatSerializer < ActiveModel::Serializer
   attributes :id, :user_1_id, :user_2_id, :user_1_accepted, :user_2_accepted, :name, :last_read_at
   attributes :other_user, :others_last_read_at
   attributes :other_user_apparel_images, :owned_apparel_images
-  attributes :unread_messages_count, :total_messages_count, :last_message_sent_at
+  attributes :unread_messages_count, :total_messages_count, :last_message_sent
 
   # def initialize(object, options = {})
   #   super(object, options = {})
@@ -98,7 +98,8 @@ class ChatSerializer < ActiveModel::Serializer
     object.chat_messages.length
   end
 
-  def last_message_sent_at
-    object.chat_messages.first.created_at if object.chat_messages.length > 0
+  def last_message_sent
+    @last_message_sent ||= object.chat_messages.first
+    @last_message_sent
   end
 end
