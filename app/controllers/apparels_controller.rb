@@ -23,6 +23,11 @@ class ApparelsController < ApplicationController
   def index
     @apparels = Apparel.where.not(user: current_user)
     @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
+
+    @apparels = @apparels.where(gender: params[:gender]) if params[:gender].present?
+    @apparels = @apparels.where(age_info: params[:age_info]) if params[:age_info].present?
+    @apparels = @apparels.where(size_info: params[:size_info]) if params[:size_info].present?
+
     @apparels = @apparels.joins(:user).by_distance(:origin => current_user)
 
     render json: @apparels
