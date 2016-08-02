@@ -21,9 +21,7 @@ class ChatSerializer < ActiveModel::Serializer
   attributes :unread_messages_count, :total_messages_count, :last_message_sent
 
   class CustomApparelSerializer < ActiveModel::Serializer
-    attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info
-
-    has_one :main_image, serializer: ApparelImageSerializer
+    attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info, :main_image
   end
 
   has_many :other_user_apparels, serializer: CustomApparelSerializer do
