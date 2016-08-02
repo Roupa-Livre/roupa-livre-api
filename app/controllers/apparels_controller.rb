@@ -24,9 +24,17 @@ class ApparelsController < ApplicationController
     @apparels = Apparel.where.not(user: current_user)
     @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
 
+    # puts params.to_json
+
     @apparels = @apparels.where(gender: params[:gender]) if params[:gender].present?
     @apparels = @apparels.where(age_info: params[:age_info]) if params[:age_info].present?
     @apparels = @apparels.where(size_info: params[:size_info]) if params[:size_info].present?
+    if params[:apparel_tags].present?
+      apparel_tag_names = params[:apparel_tags].split(',')
+      apparel_tag_names.each do |tag_name|
+        @apparels = @apparels.where(id: ApparelTag.where('apparel_tags.apparel_id = apparels.id').where('apparel_tags.name = ?', tag_name).select('apparel_tags.apparel_id'))  
+      end
+    end
 
     @apparels = @apparels.joins(:user).by_distance(:origin => current_user)
 
