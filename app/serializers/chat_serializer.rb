@@ -21,10 +21,10 @@ class ChatSerializer < ActiveModel::Serializer
   attributes :unread_messages_count, :total_messages_count, :last_message_sent
 
   class CustomApparelSerializer < ActiveModel::Serializer
-    attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info, :main_image
+    attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info
 
-    def main_image
-      object.apparel_images.length > 0 ? object.apparel_images.first : nil
+    has_one :main_image, serializer: ApparelImageSerializer do
+      object.apparel_images.first
     end
   end
 
