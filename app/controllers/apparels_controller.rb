@@ -16,6 +16,7 @@
 class ApparelsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_apparel, only: [:show, :update, :destroy, :like, :dislike]
+  before_action :check_apparel_owner, only: [:update, :destroy]
 
   # GET /apparels
   # GET /apparels.json
@@ -81,6 +82,13 @@ class ApparelsController < ApplicationController
 
     def set_apparel
       @apparel = Apparel.find(params[:id])
+    end
+
+    def check_apparel_owner
+      if @apparel.user != current_user
+        render :nothing => true, status: :unauthorized
+        false
+      end
     end
 
     def apparel_params
