@@ -16,7 +16,7 @@
 class ApparelsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_apparel, only: [:show, :update, :destroy, :like, :dislike]
-  before_action :check_apparel_owner, only: [:update, :destroy]
+  before_action :check_apparel_owner, only: [:show, :update, :destroy]
 
   # GET /apparels
   # GET /apparels.json
