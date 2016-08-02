@@ -24,7 +24,7 @@ class ChatSerializer < ActiveModel::Serializer
     attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info, :main_image
 
     def main_image
-      object.apparel_images.length > 0 ? apparel_images.first : nil
+      object.apparel_images.length > 0 ? object.apparel_images.first : nil
     end
   end
 
