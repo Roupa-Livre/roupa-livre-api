@@ -18,8 +18,23 @@
 class ChatSerializer < ActiveModel::Serializer
   attributes :id, :user_1_id, :user_2_id, :user_1_accepted, :user_2_accepted, :name, :last_read_at
   attributes :other_user, :others_last_read_at
-  attributes :other_user_apparel_images, :owned_apparel_images
   attributes :unread_messages_count, :total_messages_count, :last_message_sent
+
+  class CustomApparelSerializer < ActiveModel::Serializer
+    attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info, :main_image
+
+    def main_image
+      object.apparel_images.length > 0 ? apparel_images.first : nil
+    end
+  end
+
+  has_many :other_user_apparels, serializer: CustomApparelSerializer do
+    object.user_apparels(other_user)
+  end
+
+  has_many :owned_apparels, serializer: CustomApparelSerializer do
+    object.user_apparels(current_user)
+  end
 
   # def initialize(object, options = {})
   #   super(object, options = {})
@@ -82,12 +97,12 @@ class ChatSerializer < ActiveModel::Serializer
     end
   end
 
-  def other_user_apparel_images
-    object.user_apparels(other_user).map { |apparel| apparel.apparel_images.first  } if @other_user
+  def other_user_apparels
+    object.user_apparels(other_user) if @other_user
   end
 
-  def owned_apparel_images
-    object.user_apparels(current_user).map { |apparel| apparel.apparel_images.first  } if current_user
+  def owned_apparels
+    object.user_apparels(current_user) if current_user
   end
 
   def unread_messages_count
@@ -102,4 +117,6 @@ class ChatSerializer < ActiveModel::Serializer
     @last_message_sent ||= object.chat_messages.first
     @last_message_sent
   end
+
+  
 end
