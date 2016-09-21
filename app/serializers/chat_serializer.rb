@@ -102,7 +102,7 @@ class ChatSerializer < ActiveModel::Serializer
   end
 
   def unread_messages_count
-    object.get_last_messages(object.last_read_date(current_user)).length
+    object.get_last_messages(object.last_read_date(current_user), current_user).length
   end
 
   def total_messages_count
