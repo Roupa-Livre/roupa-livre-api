@@ -4,24 +4,20 @@ require 'grocer'
 class PushSender
   include Singleton
 
-  def fcm
-    @fcm ||= FCM.new("AIzaSyAFj1JeQLV5pkjBdUaA4xKcsPHQZsUn7qg")
-  end
-
-  def grocer
-    @grocer ||= Grocer.pusher(certificate: ios_cert_path, passphrase: "PERES")
-  end
-
   def send_android_push(registration_ids, title, message, image, push_collapse_key, extraData)
+    sender = FCM.new("AIzaSyAFj1JeQLV5pkjBdUaA4xKcsPHQZsUn7qg")
+
     options = { data: extraData, collapse_key: push_collapse_key}
     options[:data][:title] = title
     options[:data][:message] = message
     options[:data][:image] = image
 
-    response = fcm.send(registration_ids, options)
+    response = sender.send(registration_ids, options)
   end
 
   def send_ios_push(registration_ids, title, message, image, push_collapse_key, extraData)
+    sender = Grocer.pusher(certificate: ios_cert_path)
+
     registration_ids.each do |registration_id|
       notification = Grocer::Notification.new(
         device_token:      registration_id,
@@ -29,7 +25,7 @@ class PushSender
         badge:             1,
         custom:             extraData
       )
-      grocer.push(notification)
+      sender.push(notification)
     end
   end
 
