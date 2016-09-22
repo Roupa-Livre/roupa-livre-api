@@ -25,8 +25,8 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def send_push
-    do_send_push(chat.other_recipients(self.user), 'Nova mensagem na troca de peças', self.message, self.user.social_image, 'roupa_new_message', { chat_id: self.chat_id, type: 'message' })
-    do_send_push([ self.user ], 'Nova mensagem na troca de peças', self.message, self.user.social_image, 'roupa_new_message', { chat_id: self.chat_id, type: 'message' })
+    do_send_push(chat.other_recipients(self.user), 'Mensagem nova na troca', self.message, nil, 'roupa_new_message', { chat_id: self.chat_id, type: 'message' })
+    # do_send_push([ self.user ], 'Mensagem nova na troca', self.message, self.user.social_image, 'roupa_new_message', { chat_id: self.chat_id, type: 'message' })
   end
 
   def publish_to_realtime
@@ -38,7 +38,9 @@ class ChatMessage < ActiveRecord::Base
 
   protected
     def do_send_push(users, title, message, image, push_collapse_key, extraData)
-      ids = Identity.where(provider: 'android', user: users).map { |e| e.uid  }
-      PushSender.instance.send_android_push(ids, title, message, image, push_collapse_key, extraData)
+      ids = Device.where(provider: 'android', user: users).map { |e| e.uid  }
+      if ids.length > 0
+        PushSender.instance.send_android_push(ids, title, message, image, push_collapse_key, extraData)
+      end
     end
 end
