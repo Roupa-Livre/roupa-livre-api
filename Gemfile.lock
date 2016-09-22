@@ -91,6 +91,7 @@ GEM
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     google-analytics-rails (1.1.0)
+    grocer (0.7.0)
     hashie (3.4.3)
     httparty (0.14.0)
       multi_xml (>= 0.5.2)
@@ -227,6 +228,7 @@ DEPENDENCIES
   fcm
   geokit-rails
   google-analytics-rails
+  grocer
   kaminari
   letter_opener
   omniauth

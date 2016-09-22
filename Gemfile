@@ -45,6 +45,10 @@ group :android do
   gem 'fcm'
 end
 
+group :ios do
+  gem 'grocer'
+end
+
 group :logging do
   gem 'google-analytics-rails'
   gem 'rollbar', '~> 2.2.1'
