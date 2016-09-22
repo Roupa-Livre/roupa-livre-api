@@ -42,6 +42,6 @@ class ChatMessage < ActiveRecord::Base
       PushSender.instance.send_android_push(android_ids, title, message, image, push_collapse_key, extraData) if android_ids.length
 
       ios_ids = Device.where(provider: 'ios', user: users).map { |e| e.uid  }
-      PushSender.instance.send_android_push(ios_ids, title, message, image, push_collapse_key, extraData) if android_ids.length
+      PushSender.instance.send_ios_push(ios_ids, title, message, image, push_collapse_key, extraData) if android_ids.length
     end
 end
