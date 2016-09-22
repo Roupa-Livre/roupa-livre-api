@@ -21,7 +21,7 @@ class PushSender
     registration_ids.each do |registration_id|
       notification = Grocer::Notification.new(
         device_token:      registration_id,
-        alert:             message,
+        alert:             { title: title, body: message},
         badge:             1,
         custom:             extraData
       )
