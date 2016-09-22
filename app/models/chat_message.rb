@@ -38,9 +38,10 @@ class ChatMessage < ActiveRecord::Base
 
   protected
     def do_send_push(users, title, message, image, push_collapse_key, extraData)
-      ids = Device.where(provider: 'android', user: users).map { |e| e.uid  }
-      if ids.length > 0
-        PushSender.instance.send_android_push(ids, title, message, image, push_collapse_key, extraData)
-      end
+      android_ids = Device.where(provider: 'android', user: users).map { |e| e.uid  }
+      PushSender.instance.send_android_push(android_ids, title, message, image, push_collapse_key, extraData) if android_ids.length
+
+      ios_ids = Device.where(provider: 'ios', user: users).map { |e| e.uid  }
+      PushSender.instance.send_android_push(ios_ids, title, message, image, push_collapse_key, extraData) if android_ids.length
     end
 end
