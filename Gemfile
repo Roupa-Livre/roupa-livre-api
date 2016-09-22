@@ -42,7 +42,7 @@ group :database do
 end
 
 group :android do
-  gem 'gcm'
+  gem 'fcm'
 end
 
 group :logging do

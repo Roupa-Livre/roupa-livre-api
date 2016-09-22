@@ -9,6 +9,7 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
+require 'push_sender'
 
 class ChatMessage < ActiveRecord::Base
   belongs_to :chat
@@ -16,10 +17,16 @@ class ChatMessage < ActiveRecord::Base
 
   validates_presence_of :chat, :user, :message
 
+  after_create :send_push
   after_create :publish_to_realtime
 
   def is_owner(user)
     user.id == user_id
+  end
+
+  def send_push
+    do_send_push(chat.other_recipients(self.user), 'Nova mensagem na troca de peças', self.message, self.user.social_image, 'roupa_new_message', { chat_id: self.chat_id, type: 'message' })
+    do_send_push([ self.user ], 'Nova mensagem na troca de peças', self.message, self.user.social_image, 'roupa_new_message', { chat_id: self.chat_id, type: 'message' })
   end
 
   def publish_to_realtime
@@ -28,4 +35,10 @@ class ChatMessage < ActiveRecord::Base
       REDIS.publish 'realtime_msg', data
     end
   end
+
+  protected
+    def do_send_push(users, title, message, image, push_collapse_key, extraData)
+      ids = Identity.where(provider: 'android', user: users).map { |e| e.uid  }
+      PushSender.instance.send_android_push(ids, title, message, image, push_collapse_key, extraData)
+    end
 end

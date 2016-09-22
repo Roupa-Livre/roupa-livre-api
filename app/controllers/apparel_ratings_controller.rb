@@ -34,9 +34,7 @@ class ApparelRatingsController < ApplicationController
     @apparel_rating.user = current_user
 
     if @apparel_rating.save
-      chat = check_apparel_rating
-
-      render json: @apparel_rating, chat: chat, status: :created, location: @apparel_rating
+      render json: @apparel_rating, chat: @apparel_rating.linked_chat, status: :created, location: @apparel_rating
     else
       render json: @apparel_rating.errors, status: :unprocessable_entity
     end
@@ -49,9 +47,7 @@ class ApparelRatingsController < ApplicationController
     if @apparel_rating.user != current_user
       render status: :unauthorized
     elsif @apparel_rating.update(apparel_rating_params)
-      chat = check_apparel_rating
-      
-      render json: @apparel_rating, chat: chat
+      render json: @apparel_rating, chat: @apparel_rating.linked_chat
     else
       render json: @apparel_rating.errors, status: :unprocessable_entity
     end
@@ -66,20 +62,6 @@ class ApparelRatingsController < ApplicationController
   end
 
   private
-
-    def check_apparel_rating
-      chat = nil
-      if @apparel_rating.liked 
-        owner_user = @apparel_rating.user
-        liked_user = @apparel_rating.apparel.user
-
-        liked_user_reverse_liked_ratings = liked_user.apparel_ratings.where(apparel: owner_user.apparels, liked: true)
-        if liked_user_reverse_liked_ratings.length > 0
-          chat = Chat.find_or_create_chat(owner_user, liked_user)
-        end
-      end
-      chat
-    end
 
     def set_apparel_rating
       @apparel_rating = ApparelRating.find(params[:id])

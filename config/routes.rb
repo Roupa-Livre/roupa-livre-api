@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     end
   end
   post 'users/update_image', to: "users#update_image"
+  post 'users/register_device', to: "users#register_device"
 
   mount_devise_token_auth_for 'User', at: 'auth', controllers: { 
     registrations: 'overrides/registrations', 

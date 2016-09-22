@@ -77,6 +77,14 @@ class Chat < ActiveRecord::Base
     end
   end
 
+  def other_recipients(user)
+    recipients = []
+    if user
+      recipients.push(user_1) if user_1_id != user.id
+      recipients.push(user_2) if user_2_id != user.id
+    end
+    recipients
+  end
 
   def self.find_or_create_chat(user1, user2)
     chat = Chat.active_by_user(user1, user2)
