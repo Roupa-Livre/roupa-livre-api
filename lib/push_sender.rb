@@ -5,7 +5,7 @@ class PushSender
   include Singleton
 
   def send_android_push(registration_ids, title, message, image, push_collapse_key, extraData)
-    sender = FCM.new("AIzaSyAFj1JeQLV5pkjBdUaA4xKcsPHQZsUn7qg")
+    sender = FCM.new(ENV["FCM_SENDER_KEY"])
 
     options = { data: extraData, collapse_key: push_collapse_key}
     options[:data][:title] = title
