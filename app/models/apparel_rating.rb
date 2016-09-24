@@ -20,7 +20,7 @@ class ApparelRating < ActiveRecord::Base
     owner_user = self.user
     liked_user = self.apparel.user
     
-    linked_chat = Chat.active_by_user(user1, user2)
+    linked_chat = Chat.active_by_user(owner_user, liked_user)
     linked_chat
   end
 
