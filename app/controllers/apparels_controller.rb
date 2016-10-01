@@ -37,7 +37,7 @@ class ApparelsController < ApplicationController
     end
 
     @apparels = @apparels.joins(:user).by_distance(:origin => current_user)
-    @apparels = @apparels.limit(params[:page_size]) if params[:page_size]
+    @apparels = @apparels.limit(params[:page_size] || 10)
 
     render json: @apparels
   end
