@@ -29,10 +29,9 @@ class PushSender
     end
   end
 
-  protected
-    def ios_cert_path
-      path = "#{Rails.root}/config/apn_credentials/"
-      path += Rails.env.production? ? "production-cert.pem" : (ENV["APN_CERTIFICATE_FILE"] ? ENV["APN_CERTIFICATE_FILE"] : "development-cert.pem")
-      return path    
-    end
+  def ios_cert_path
+    path = "#{Rails.root}/config/apn_credentials/"
+    path += Rails.env.production? ? "production-cert.pem" : (ENV["APN_CERTIFICATE_FILE"] ? ENV["APN_CERTIFICATE_FILE"] : "development-cert.pem")
+    return path    
+  end
 end
