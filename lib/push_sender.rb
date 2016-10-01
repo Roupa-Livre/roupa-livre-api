@@ -16,7 +16,11 @@ class PushSender
   end
 
   def send_ios_push(registration_ids, title, message, image, push_collapse_key, extraData)
-    sender = Grocer.pusher(certificate: ios_cert_path)
+    if ios_gateway
+      sender = Grocer.pusher(certificate: ios_cert_path, gateway: ios_gateway)
+    else
+      sender = Grocer.pusher(certificate: ios_cert_path)
+    end
 
     registration_ids.each do |registration_id|
       notification = Grocer::Notification.new(
@@ -27,6 +31,10 @@ class PushSender
       )
       sender.push(notification)
     end
+  end
+
+  def ios_gateway
+    ENV['APN_GATEWAY']
   end
 
   def ios_cert_path
