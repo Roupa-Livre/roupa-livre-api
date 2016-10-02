@@ -36,13 +36,26 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
 
   def register_device
-    device = Device.find_or_create_by(user: current_user, provider: update_image_params[:provider], uid: update_image_params[:registration_id])
+    device = Device.find_or_create_by(user: current_user, 
+      provider: update_device_params[:provider], 
+      uid: update_device_params[:registration_id],
+      device_uid: update_device_params[:device_uid])
+
+    if device
+      Device.where(user: current_user, 
+        provider: update_device_params[:provider], 
+        device_uid: update_device_params[:device_uid]).
+        where.not(uid: update_device_params[:registration_id]).destroy_all
+    end
+
     render json: device
   end
 
   def unregister_device
-    device = Device.find_by(user: current_user, provider: update_image_params[:provider], uid: update_image_params[:registration_id])
-    device.destroy if device
+    Device.where(user: current_user, 
+        provider: update_device_params[:provider], 
+        device_uid: update_device_params[:device_uid]).destroy_all
+    
     head :no_content
   end
 
@@ -57,7 +70,7 @@ class UsersController < ApplicationController
       params.permit(:image, :image_cache)
     end
 
-    def update_image_params
-      params.permit(:registration_id, :provider)
+    def update_device_params
+      params.permit(:registration_id, :provider, :device_uid)
     end
 end

@@ -8,6 +8,7 @@
 #  uid        :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  device_uid :string
 #
 
 require 'test_helper'
