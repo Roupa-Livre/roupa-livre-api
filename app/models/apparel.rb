@@ -24,6 +24,9 @@ class Apparel < ActiveRecord::Base
   has_many :apparel_tags, dependent: :destroy
   accepts_nested_attributes_for :apparel_tags, :allow_destroy => true
 
+  has_many :apparel_ratings, dependent: :destroy
+  has_many :chat_apparels, dependent: :destroy
+
   def main_image
     self.apparel_images.first
   end
