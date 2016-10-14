@@ -1,7 +1,11 @@
 CarrierWave.configure do |config|
   if Rails.env.production?
     config.storage = :aws
-    config.aws_bucket =  "roupa.livre"
+    if ENV["AWS_BUCKET"]
+      config.aws_bucket = ENV["AWS_BUCKET"]
+    else
+      config.aws_bucket = "roupa.livre"
+    end
   elsif (Rails.env.development? && Rails.application.secrets.aws_access_key_id.present?)
     config.storage = :aws
     config.aws_bucket =  "roupa.livre"
