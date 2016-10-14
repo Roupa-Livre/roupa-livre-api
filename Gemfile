@@ -35,6 +35,8 @@ gem 'omniauth-google-oauth2'
 # gem 'instagram'
 # gem 'google-api-client', require: 'google/api_client'
 
+gem 'rollbar', '~> 2.12.0'
+
 group :database do
   group :postgresql do
     gem 'pg'
@@ -51,7 +53,6 @@ end
 
 group :logging do
   gem 'google-analytics-rails'
-  gem 'rollbar', '~> 2.2.1'
 end
 
 group :development do
