@@ -14,6 +14,9 @@ class ApparelRating < ActiveRecord::Base
   belongs_to :apparel
   belongs_to :user
 
+  validates_presence_of :user, :apparel
+  validates_uniqueness_of :user, :scope => :apparel
+
   after_create :check_or_create_chat
 
   def linked_chat
