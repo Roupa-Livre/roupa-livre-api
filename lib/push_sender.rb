@@ -17,9 +17,9 @@ class PushSender
 
   def send_ios_push(registration_ids, title, message, image, push_collapse_key, extraData)
     if ios_gateway
-      sender = Grocer.pusher(certificate: ios_cert_path, gateway: ios_gateway)
+      sender = Grocer.pusher(certificate: ios_certificate, gateway: ios_gateway)
     else
-      sender = Grocer.pusher(certificate: ios_cert_path)
+      sender = Grocer.pusher(certificate: ios_certificate)
     end
 
     registration_ids.each do |registration_id|
@@ -35,6 +35,10 @@ class PushSender
 
   def ios_gateway
     ENV['APN_GATEWAY']
+  end
+
+  def ios_certificate
+    ENV['APN_CERTIFICATE'] ? StringIO.new(ENV['APN_CERTIFICATE']) : ios_cert_path
   end
 
   def ios_cert_path
