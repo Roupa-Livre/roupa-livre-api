@@ -11,6 +11,7 @@
 #
 
 class ApparelRatingsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_apparel_rating, only: [:show, :update, :destroy]
 
   # GET /apparel_ratings
