@@ -27,7 +27,9 @@ class ApplicationController < ActionController::API
       added_images = []
       begin
         final_params = current_params
-        final_params[:apparel_images_attributes] = do_load_new_images(final_params[:apparel_images_attributes], added_images)
+        if final_params[:apparel_images_attributes]
+          final_params[:apparel_images_attributes] = do_load_new_images(final_params[:apparel_images_attributes], added_images)
+        end
         yield final_params
       ensure
         clear_temp_images(added_images)
