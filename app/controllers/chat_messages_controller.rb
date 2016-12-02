@@ -20,6 +20,8 @@ class ChatMessagesController < ApplicationController
   # GET /chat_messages
   # GET /chat_messages.json
   def index
+    # sleep(3) para testes
+
     @chat_messages = []
     if params[:chat_id].present?
       chat = Chat.find(params[:chat_id])
