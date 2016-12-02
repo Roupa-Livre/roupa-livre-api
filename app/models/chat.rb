@@ -25,6 +25,8 @@ class Chat < ActiveRecord::Base
   has_many :chat_messages, -> { order('created_at DESC') }, dependent: :destroy
   has_many :chat_apparels, dependent: :destroy
   has_many :apparels, through: :chat_apparels
+  
+  after_create :send_push
 
   def self.active_by_user(user1, user2)
     chat = Chat.find_by(user_1: user1, user_2: user2, closed: [nil, false])
@@ -94,4 +96,20 @@ class Chat < ActiveRecord::Base
     chat.create_chat_apparels
     chat
   end
+
+  def send_push
+    if user_1 && user_2
+      do_send_push(user_1, 'Combinou! ' + self.user_2.public_name + ' também gostou das suas peças ...', self.message, nil, 'roupa_new_message', { chat_id: self.chat_id, type: 'match' })
+      do_send_push(user_2, 'Combinou! ' + self.user_1.public_name + ' também gostou das suas peças ...', self.message, nil, 'roupa_new_message', { chat_id: self.chat_id, type: 'match' })
+    end
+  end
+
+  protected
+    def do_send_push(user, title, message, image, push_collapse_key, extraData)
+      android_ids = Device.where(provider: 'android', user: user).map { |e| e.uid  }
+      PushSender.instance.send_android_push(android_ids, title, message, image, push_collapse_key, extraData) if android_ids.length
+
+      ios_ids = Device.where(provider: 'ios', user: users).map { |e| e.uid  }
+      PushSender.instance.send_ios_push(ios_ids, title, message, image, push_collapse_key, extraData) if android_ids.length
+    end
 end
