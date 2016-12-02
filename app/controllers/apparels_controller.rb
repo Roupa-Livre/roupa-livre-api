@@ -21,10 +21,11 @@ class ApparelsController < ApplicationController
   # GET /apparels
   # GET /apparels.json
   def index
+    # sleep(3) para testes
+
     @apparels = Apparel.where.not(user: current_user)
     @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
-
-    # puts params.to_json
+    @apparels = @apparels.where.not(id: params[:ignore].split(',')) if params[:ignore].present? && !params[:ignore].blank?
 
     @apparels = @apparels.where(gender: params[:gender]) if params[:gender].present?
     @apparels = @apparels.where(age_info: params[:age_info]) if params[:age_info].present?
