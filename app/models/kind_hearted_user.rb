@@ -84,4 +84,49 @@ class KindHeartedUser < User
     params = params.merge(type: user_type, uid: params[:uid].present? ? params[:uid] : nil)
     self.update_attributes(params)
   end
+
+  def merge_similar_apparels(base_apparel)
+    self.apparels.where.not(id: base_apparel.id).where(title: base_apparel.title).each do |apparel|
+      apparel.apparel_ratings.each do |rating|
+        base_rating = base_apparel.apparel_ratings.find_by(user: rating.user)
+        if !base_rating || rating.created_at > base_rating.created_at
+          # base_rating.destroy! if base_rating
+          # rating.update(apparel_id: base_apparel.id)
+          if base_rating
+            puts "UPDATING RATING: #{base_apparel.id}|#{apparel.id} => #{base_rating.id}|#{rating.id}"
+          else
+            puts "INSERT RATING: #{base_apparel.id}|#{apparel.id} => #{rating.id}"
+          end
+        end
+      end
+
+      apparel.chat_apparels.each do |chat_apparel|
+        base_chat_apparel = base_apparel.chat_apparels.find_by(chat: chat_apparel.chat)
+        if !base_chat_apparel || chat_apparel.created_at > base_chat_apparel.created_at
+          # base_chat_apparel.destroy! if base_chat_apparel
+          # chat_apparel.update(apparel_id: base_apparel.id)
+          if base_chat_apparel
+            puts "UPDATING RATING: #{base_apparel.id}|#{apparel.id} => #{base_chat_apparel.id}|#{chat_apparel.id}"
+          else
+            puts "INSERT RATING: #{base_apparel.id}|#{apparel.id} => #{chat_apparel.id}"
+          end
+        end
+      end
+
+      puts "REMOVING APPAREL: #{base_apparel.id}|#{apparel.id}"
+      # apparel.destroy
+    end
+  end
+
+  def merge_similar_apparels
+    checked = []
+    apparel = self.apparels.where.not(id: checked).first
+    while !apparel
+      checked.push(apparel.id)
+
+      merge_similar_apparels(apparel)
+
+      apparel = self.apparels.where.not(id: checked).first
+    end
+  end
 end
