@@ -33,9 +33,13 @@ class Apparel < ActiveRecord::Base
     self.apparel_images.first
   end
 
+  def similars
+    self.user.apparels.where(title: self.title).where.not(id: self.id)
+  end
+
   protected
     def check_same_name
-      if self.user.apparels.where(title: self.title).where.not(id: self.id).count > 0
+      if self.similars.count > 0
         errors.add(:title, :duplicate)
         return false
       end

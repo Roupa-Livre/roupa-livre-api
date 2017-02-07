@@ -86,7 +86,7 @@ class KindHeartedUser < User
   end
 
   def merge_similar_apparels(base_apparel)
-    self.apparels.where.not(id: base_apparel.id).where(title: base_apparel.title).each do |apparel|
+    base_apparel.similars.each do |apparel|
       apparel.apparel_ratings.each do |rating|
         base_rating = base_apparel.apparel_ratings.find_by(user: rating.user)
         if !base_rating || rating.created_at > base_rating.created_at
