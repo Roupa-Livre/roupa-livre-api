@@ -121,7 +121,7 @@ class KindHeartedUser < User
   def merge_apparels
     checked = []
     apparel = self.apparels.where.not(id: checked).first
-    while !apparel
+    while apparel
       checked.push(apparel.id)
 
       merge_similar_apparels(apparel)
