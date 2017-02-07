@@ -27,7 +27,17 @@ class Apparel < ActiveRecord::Base
   has_many :apparel_ratings, dependent: :destroy
   has_many :chat_apparels, dependent: :destroy
 
+  validate :check_same_name
+
   def main_image
     self.apparel_images.first
   end
+
+  protected
+    def check_same_name
+      if self.user.apparels.where(title: self.title).where.not(id: self.id).count > 0
+        errors.add(:title, :duplicate)
+        return false
+      end
+    end
 end
