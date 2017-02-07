@@ -34,7 +34,7 @@ class Apparel < ActiveRecord::Base
   end
 
   def similars
-    self.user.apparels.where(title: self.title).where.not(id: self.id)
+    self.user.apparels.where(title: self.title, description: self.description).where.not(id: self.id)
   end
 
   protected
