@@ -17,12 +17,16 @@
 
 class ChatsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_chat, only: [:show, :update, :destroy]
+  before_action :set_chat, only: [:show, :update, :destroy, :block]
 
   # GET /chats
   # GET /chats.json
   def index
     @chats = Chat.where('user_1_id = ? or user_2_id = ?', current_user.id, current_user.id)
+
+    blocked_user_ids = current_user.blocked_users.select(:blocked_user_id)
+    @chats = @chats.where.not(:user_1_id => blocked_user_ids)
+    @chats = @chats.where.not(:user_2_id => blocked_user_ids)
 
     render json: @chats
   end
@@ -64,13 +68,31 @@ class ChatsController < ApplicationController
   # PATCH/PUT /chats/1
   # PATCH/PUT /chats/1.json
   def update
-    @chat = Chat.find(params[:id])
-
     if @chat.update(chat_params)
       head :no_content
     else
       render json: @chat.errors, status: :unprocessable_entity
     end
+  end
+
+  # POST /chats/1/block
+  # POST /chats/1/block.json
+  def block
+    blocked_user_id = nil
+    if @chat.user_1 == current_user
+      blocked_user_id = @chat.user_2_id
+    elsif @chat.user_2 == current_user
+      blocked_user_id = @chat.user_1_id
+    end
+
+    blocked_user = current_user.blocked_users.new(blocked_user_id: blocked_user_id)
+    if blocked_user_id && blocked_user.save
+      head :no_content
+    else
+      render json: blocked_user.errors, status: :unprocessable_entity
+    end
+
+    head :no_content
   end
 
   # DELETE /chats/1
@@ -85,6 +107,10 @@ class ChatsController < ApplicationController
 
     def set_chat
       @chat = Chat.find(params[:id])
+      if current_user != @chat.user_1  && @chat.user_2 != current_user
+        render :nothing => true, status: :unauthorized
+        false
+      end
     end
 
     def chat_params

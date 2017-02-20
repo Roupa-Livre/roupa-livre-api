@@ -21,6 +21,7 @@ class Chat < ActiveRecord::Base
 
   validates_presence_of :user_1, :user_2
   validates_uniqueness_of :user_1, :scope => :user_2
+  validate :check_blocked_users
   
   has_many :chat_messages, -> { order('created_at DESC') }, dependent: :destroy
   has_many :chat_apparels, dependent: :destroy
@@ -88,6 +89,16 @@ class Chat < ActiveRecord::Base
     recipients
   end
 
+  def other_non_blocked_recipients(user)
+    recipients = self.other_recipients(user)
+    recipients = recipients.select do |other_user|
+      blocked_user_ids = other_user.blocked_users.select(:blocked_user_id)
+      result = blocked_user_ids.include? user.id
+      result
+    end
+    recipients
+  end
+
   def self.find_or_create_chat(user1, user2)
     chat = Chat.active_by_user(user1, user2)
     if !chat
@@ -105,6 +116,25 @@ class Chat < ActiveRecord::Base
   end
 
   protected
+    def check_blocked_users
+      if user_1 && user_2
+        result = true
+        blocked_user_1_ids = user_1.blocked_users.select(:blocked_user_id)
+        if blocked_user_1_ids.include? user_2.id
+          errors.add(:user_2, :blocked)
+          result = false
+        end
+
+        blocked_user_2_ids = user_2.blocked_users.select(:blocked_user_id)
+        if blocked_user_2_ids.include? user_1.id
+          errors.add(:user_1, :blocked)
+          result = false
+        end
+
+        return false if !result
+      end
+    end
+
     def do_send_push(user, title, message, image, push_collapse_key, extraData)
       android_ids = Device.where(provider: 'android', user: user).map { |e| e.uid  }
       PushSender.instance.send_android_push(android_ids, title, message, image, push_collapse_key, extraData) if android_ids.length

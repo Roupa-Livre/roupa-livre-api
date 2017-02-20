@@ -4,6 +4,9 @@ Rails.application.routes.draw do
     collection do
       get 'active_by_user/:user_id', to: "chats#active_by_user"
     end
+    member do
+      post 'block'
+    end
   end
   resources :apparel_ratings, except: [:new, :edit]
   resources :apparel_tags, except: [:new, :edit]

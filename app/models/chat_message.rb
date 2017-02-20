@@ -25,8 +25,10 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def send_push
-    do_send_push(chat.other_recipients(self.user), self.user.public_name + ' diz...', self.message, nil, 'roupa_new_message', { chat_id: self.chat_id, type: 'message' })
-    # do_send_push([ self.user ], 'Mensagem nova na troca', self.message, self.user.social_image, 'roupa_new_message', { chat_id: self.chat_id, type: 'message' })
+    recipients = chat.other_non_blocked_recipients(self.user)
+    if recipients.length > 0
+      do_send_push(recipients, self.user.public_name + ' diz...', self.message, nil, 'roupa_new_message', { chat_id: self.chat_id, type: 'message' })
+    end
   end
 
   def publish_to_realtime
