@@ -90,7 +90,7 @@ class ApparelsController < ApplicationController
   # POST /apparels/1/report
   # POST /apparels/1/report.json
   def report
-    @apparel.report(current_user, params[:reason]) if current_user
+    @apparel.report(current_user, report_params[:reason]) if current_user
 
     head :no_content
   end
@@ -131,5 +131,9 @@ class ApparelsController < ApplicationController
       params.require(:apparel).permit(:title, :description, :size_info, :gender, :age_info, 
         apparel_tags_attributes: [:id, :name, :_destroy], 
         apparel_images_attributes: [:id, :data, :file, :file_cache, :_destroy])
+    end
+
+    def report_params
+      params.require(:apparel).permit(:reason)
     end
 end
