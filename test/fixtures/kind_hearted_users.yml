@@ -30,6 +30,7 @@
 #  updated_at             :datetime
 #  lat                    :float
 #  lng                    :float
+#  agreed                 :boolean          default(FALSE), not null
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

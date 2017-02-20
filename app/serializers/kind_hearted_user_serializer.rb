@@ -30,8 +30,9 @@
 #  updated_at             :datetime
 #  lat                    :float
 #  lng                    :float
+#  agreed                 :boolean          default(FALSE), not null
 #
 
 class KindHeartedUserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :nickname, :social_image, :image, :provider, :type
+  attributes :id, :name, :nickname, :agreed, :social_image, :image, :provider, :type
 end

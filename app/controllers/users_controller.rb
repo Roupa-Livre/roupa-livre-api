@@ -30,6 +30,7 @@
 #  updated_at             :datetime
 #  lat                    :float
 #  lng                    :float
+#  agreed                 :boolean          default(FALSE), not null
 #
 
 class UsersController < ApplicationController
@@ -62,6 +63,17 @@ class UsersController < ApplicationController
   def update_image
     current_user.update(update_image_params)
     render json: current_user
+  end
+
+  def agreed_to_terms
+    current_user.agreed = true
+    current_user.agreed_at = Time.new
+    
+    if current_user.save
+      render json: current_user
+    else
+      render json: current_user.errors, status: :unprocessable_entity
+    end
   end
 
   protected

@@ -30,6 +30,7 @@
 #  updated_at             :datetime
 #  lat                    :float
 #  lng                    :float
+#  agreed                 :boolean          default(FALSE), not null
 #
 
 require 'file_size_validator'
