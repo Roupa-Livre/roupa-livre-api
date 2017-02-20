@@ -11,20 +11,26 @@
 #  age_info    :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  deleted_at  :datetime
 #
 
+require 'securerandom'
+
 class Apparel < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :user
 
   acts_as_mappable :through => :user
-  
+
   has_many :apparel_images, -> { order('sort_order ASC') }, dependent: :destroy
   accepts_nested_attributes_for :apparel_images, :allow_destroy => true
-  
+
   has_many :apparel_tags, dependent: :destroy
   accepts_nested_attributes_for :apparel_tags, :allow_destroy => true
 
   has_many :apparel_ratings, dependent: :destroy
+  has_many :apparel_reports, dependent: :destroy
   has_many :chat_apparels, dependent: :destroy
 
   validate :check_same_name
@@ -35,6 +41,10 @@ class Apparel < ActiveRecord::Base
 
   def similars
     self.user.apparels.where(title: self.title, description: self.description).where.not(id: self.id)
+  end
+
+  def report(user, reason)
+    self.apparel_reports.create(user: user, number: SecureRandom.hex(16), reason: reason)
   end
 
   protected

@@ -1,0 +1,64 @@
+h1 Olá,
+
+p Uma peça foi denunciada agora pouco
+
+h2 = @apparel.title
+
+h3 Info Dono da DENUNICA
+
+p
+  span Nome: 
+  span = @apparel_report.user.name
+  br/
+  - if @apparel_report.user.nickname.present?
+    span Apelido: 
+    span = @apparel_report.user.nickname
+    br/
+  span Email: 
+  span = @apparel_report.user.email
+  br/
+  span Motivo: 
+  span = @apparel_report.reason
+
+h3 Info Dono da Peça
+
+p
+  span Nome: 
+  span = @apparel.user.name
+  br/
+  - if @apparel.user.nickname.present?
+    span Apelido: 
+    span = @apparel.user.nickname
+    br/
+  span Email: 
+  span = @apparel.user.email
+  br/
+
+h3 Info Peça
+
+ul
+  li
+    span Tamanho: 
+    span = @apparel.size_info
+  li
+    span Genero: 
+    span = @apparel.gender
+  li
+    span Adulta ou Infantil: 
+    span = @apparel.age_info
+  li
+    span Tags: 
+    span = @apparel.apparel_tags.map { |t| t.name  }.join(', ')
+  li
+    span Descrição: 
+    span = @apparel.description
+
+h3 Imagens
+
+ul
+  - @apparel.apparel_images.each do |image|
+    li
+      img src="#{image.file_url}"
+
+
+= link_to 'Para remover a peça clique aqui', remove_reported_apparel_url(id: @apparel.id, token: @apparel_report.number)

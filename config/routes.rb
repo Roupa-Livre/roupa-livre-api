@@ -12,6 +12,11 @@ Rails.application.routes.draw do
     collection do
       get 'owned'
     end
+    member do
+      post 'report'
+
+      get '/remove_reported/:token', to: 'apparels#remove_reported', as: 'remove_reported'
+    end
   end
   post 'users/update_image', to: "users#update_image"
   post 'users/register_device', to: "users#register_device"

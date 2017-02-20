@@ -8,9 +8,11 @@
 #  liked      :boolean          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  deleted_at :datetime
 #
 
 class ApparelRating < ActiveRecord::Base
+  acts_as_paranoid
   belongs_to :apparel
   belongs_to :user
 

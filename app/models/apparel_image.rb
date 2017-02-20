@@ -8,9 +8,11 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  sort_order :integer
+#  deleted_at :datetime
 #
 
 class ApparelImage < ActiveRecord::Base
+  acts_as_paranoid
   belongs_to :apparel
 
   mount_uploader :file, ApparelImageUploader

@@ -11,11 +11,12 @@
 #  age_info    :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  deleted_at  :datetime
 #
 
 class ApparelsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_apparel, only: [:show, :update, :destroy, :like, :dislike]
+  before_action :authenticate_user!, except: [:remove_reported]
+  before_action :set_apparel, only: [:show, :update, :destroy, :like, :dislike, :report, :remove_reported]
   before_action :check_apparel_owner, only: [:show, :update, :destroy]
 
   # GET /apparels
@@ -25,6 +26,7 @@ class ApparelsController < ApplicationController
 
     @apparels = Apparel.where.not(user: current_user)
     @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
+    @apparels = @apparels.where.not(:id => ApparelReport.where(user: current_user).select(:apparel_id))
     @apparels = @apparels.where.not(id: params[:ignore].split(',')) if params[:ignore].present? && !params[:ignore].blank?
 
     @apparels = @apparels.where(gender: params[:gender]) if params[:gender].present?
@@ -85,10 +87,29 @@ class ApparelsController < ApplicationController
     end
   end
 
+  # POST /apparels/1/report
+  # POST /apparels/1/report.json
+  def report
+    @apparel.report(current_user, params[:reason]) if current_user
+
+    head :no_content
+  end
+
+  # GET /apparels/1/remove_reported
+  # GET /apparels/1/remove_reported.json
+  def remove_reported
+    if @apparel.apparel_reports.where(number: params[:token]).count > 0
+      @apparel.destroy
+      head :no_content
+    else
+      render :nothing => true, status: :unauthorized
+    end
+  end
+
   # DELETE /apparels/1
   # DELETE /apparels/1.json
   def destroy
-    @apparel.destroy
+    @apparel.really_destroy!
 
     head :no_content
   end

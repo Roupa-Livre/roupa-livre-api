@@ -6,6 +6,8 @@ gem 'rails-api'
 gem 'active_model_serializers' , "0.10.0.rc4"
 gem 'rack-cors'
 gem 'actionmailer'
+
+gem "paranoia", "~> 2.2"
 gem 'devise'
 gem 'devise_token_auth'
 gem 'devise_invitable', '~> 1.3.4'
@@ -14,11 +16,13 @@ gem 'carrierwave-aws'
 gem 'carrierwave_backgrounder'
 gem 'kaminari'
 gem 'api-pagination'
+
 gem 'tzinfo-data', platforms: [:mswin, :mingw, :jruby, :x64_mingw]
 
 gem 'geokit-rails'
 
 # workers
+gem 'slim'
 gem 'puma'
 gem 'realtime'
 gem 'redis'
