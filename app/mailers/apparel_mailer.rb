@@ -3,7 +3,7 @@ class ApparelMailer < ActionMailer::Base
     @apparel_report = ApparelReport.with_deleted.find(apparel_report_id)
     @apparel = @apparel_report.apparel
 
-    mail_from = ENV['MAIL_FROM'] || 'kikecomp@gmail.com'
+    mail_from = ENV['MAILER_FROM'] || 'kikecomp@gmail.com'
     mail(from: "Roupa Livre <#{mail_from}>", to: ENV['ADMIN_MAIL'], subject: "Peça denunciada")
   end
 end
