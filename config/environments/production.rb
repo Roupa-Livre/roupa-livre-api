@@ -75,7 +75,7 @@ Rails.application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   # Do not dump schema after migrations.
-  config.action_mailer.delivery_method = :smtp
   config.active_record.dump_schema_after_migration = false
+  config.action_mailer.delivery_method = :key
   config.action_mailer.default_url_options = { :host => ENV["HOST_URL"] || 'localhost:3000' }
 end

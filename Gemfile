@@ -39,6 +39,8 @@ gem 'omniauth-google-oauth2'
 # gem 'instagram'
 # gem 'google-api-client', require: 'google/api_client'
 
+gem "aws-ses", "~> 0.6.0", :require => 'aws/ses'
+
 gem 'rollbar', '~> 2.12.0'
 
 group :database do
