@@ -6,6 +6,8 @@ p Aqui estão as estatísticas
   - if grouped_stats[:date].present?
     h2 #{grouped_key.to_s}
     p Data referência #{grouped_stats[:date]}
+  - elsif grouped_stats[:end_date].present?
+    h2 #{grouped_key.to_s}
   - else
     h2 Geral
   ul
