@@ -4,7 +4,8 @@ p Aqui estão as estatísticas
 
 - @stats_object.each do |grouped_key, grouped_stats|
   - if grouped_stats[:date].present?
-    h2 Data referência #{grouped_stats[:date]}
+    h2 #{key.to_s}
+    p Data referência #{grouped_stats[:date]}
   - else
     h2 Geral
   ul

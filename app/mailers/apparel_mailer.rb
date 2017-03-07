@@ -11,6 +11,6 @@ class ApparelMailer < ActionMailer::Base
     @stats_object = stats_object
 
     mail_from = ENV['MAILER_FROM'] || 'kikecomp@gmail.com'
-    mail(from: "Roupa Livre <#{mail_from}>", to: ENV['ADMIN_MAIL'], subject: "Peça denunciada")
+    mail(from: "Roupa Livre <#{mail_from}>", to: ENV['ADMIN_MAIL'], subject: "Estatisticas")
   end
 end
