@@ -11,27 +11,37 @@ namespace :report do
   def all_stats
     all = {}
     all[:yesterday] = grouped_stats(Time.new - 1.day)
-    all[:two_days] = grouped_stats(Time.new - 2.days)
-    all[:week] = grouped_stats(Time.new - 1.week)
-    all[:month] = grouped_stats(Time.new - 1.month)
-    all[:all] = grouped_stats(Time.new - 1.year, false)
+    all[:last_two_days] = grouped_stats(Time.new - 2.days)
+    all[:last_week] = grouped_stats(Time.new - 1.week)
+    all[:last_month] = grouped_stats(Time.new - 1.month)
+    all[:before_last_month] = grouped_stats(nil, Time.new - 1.month)
+    all[:overal_all] = grouped_stats()
     all
   end
 
-  def grouped_stats(date, show_date = true)
+  def grouped_stats(start_date = nil, end_date = nil)
     results = {}
-    results[:date] = date if show_date
-    results[:apparels] = stats(Apparel, date)
-    results[:apparel_ratings] = stats(ApparelRating, date)
-    results[:blocked_users] = stats(BlockedUser, date)
-    results[:chats] = stats(Chat, date)
-    results[:chat_messages] = stats(ChatMessage, date)
-    results[:user] = stats(User, date)
+    results[:date] = start_date if start_date
+    results[:end_date] = end_date if end_date
+    results[:apparels] = stats(Apparel, start_date, end_date)
+    results[:apparel_ratings] = stats(ApparelRating, start_date, end_date)
+    results[:blocked_users] = stats(BlockedUser, start_date, end_date)
+    results[:chats] = stats(Chat, start_date, end_date)
+    results[:chat_messages] = stats(ChatMessage, start_date, end_date)
+    results[:user] = stats(User, start_date, end_date)
     results
   end
 
-  def stats(resource, date)
-    resource.where('created_at > ?', date).count
+  def stats(resource, start_date, end_date)
+    if start_date && end_date
+      resource.where('created_at > ? && created_at <= ?', start_date, end_date).count
+    elsif start_date
+      resource.where('created_at > ?', start_date).count
+    elsif end_date
+      resource.where('created_at <= ?', end_date).count
+    else
+      resource.all.count
+    end
   end
 
 end
