@@ -1,0 +1,15 @@
+h1 Olá,
+
+p Aqui estão as estatísticas
+
+- @stats_object.each do |grouped_key, grouped_stats|
+  - if grouped_stats[:date].present?
+    h2 Data referência #{grouped_stats[:date]}
+  - else
+    h2 Geral
+  ul
+    - grouped_stats.each do |key, stats_value|
+      - if key.to_s != "date"
+        li
+          span #{key.to_s}: 
+          span #{stats_value}
