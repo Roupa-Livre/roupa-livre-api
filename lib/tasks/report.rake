@@ -15,7 +15,7 @@ namespace :report do
     all[:last_week] = grouped_stats(Time.new - 1.week)
     all[:last_month] = grouped_stats(Time.new - 1.month)
     all[:before_last_month] = grouped_stats(nil, Time.new - 1.month)
-    all[:overal_all] = grouped_stats()
+    all[:overall] = grouped_stats()
     all
   end
 
