@@ -42,9 +42,9 @@ class ApparelsController < ApplicationController
 
     @apparels = @apparels.joins(:user).by_distance(:origin => current_user)
 
-    @apparels = @apparels.joins(:apparel_images)
+    # @apparels = @apparels.joins(:apparel_images)
     @apparels = @apparels.limit(params[:page_size] || 10)
-    @apparels = @apparels.select('DISTINCT apparels.*')
+    # @apparels = @apparels.group('DISTINCT apparels.*')
 
     render json: @apparels
   end
