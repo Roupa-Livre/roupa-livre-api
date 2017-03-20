@@ -24,7 +24,8 @@ namespace :report do
     results[:date] = start_date if start_date
     results[:end_date] = end_date if end_date
     results[:apparels] = stats(Apparel, start_date, end_date)
-    results[:apparel_ratings] = stats(ApparelRating, start_date, end_date)
+    results[:liked_apparel_ratings] = stats(ApparelRating.where(liked: true), start_date, end_date)
+    results[:not_liked_apparel_ratings] = stats(ApparelRating.where.not(liked: true), start_date, end_date)
     results[:blocked_users] = stats(BlockedUser, start_date, end_date)
     results[:chats] = stats(Chat, start_date, end_date)
     results[:chat_messages] = stats(ChatMessage, start_date, end_date)
