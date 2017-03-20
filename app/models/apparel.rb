@@ -34,6 +34,7 @@ class Apparel < ActiveRecord::Base
   has_many :chat_apparels, dependent: :destroy
 
   validate :check_same_name
+  validates_presence_of :title, :user
 
   def main_image
     self.apparel_images.first
