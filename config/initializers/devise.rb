@@ -263,3 +263,12 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 end
+
+Rails.application.config.to_prepare do              # to_prepare ensures that the monkey patching happens before the first request
+  Devise::OmniauthCallbacksController.class_eval do # reopen the class
+    def failure                                     # redefine the failure method
+      set_flash_message! :alert, :failure, kind: OmniAuth::Utils.camelize(failed_strategy.name), reason: failure_message
+      redirect_to after_omniauth_failure_path_for(resource_name)
+    end
+  end
+end
