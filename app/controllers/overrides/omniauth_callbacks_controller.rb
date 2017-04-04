@@ -8,6 +8,7 @@ module Overrides
         @identity.save!
       end
     end
+
     def assign_provider_attrs(user, auth_hash)
       user.assign_attributes({
         name: auth_hash.info.name, 
@@ -25,7 +26,7 @@ module Overrides
         provider: @identity.provider,
         uid: (@identity.uid || @identity.email)
       })
-      
+
       if @resource.new_record?
         @oauth_registration = true
         set_random_password

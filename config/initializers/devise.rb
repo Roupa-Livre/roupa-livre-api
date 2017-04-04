@@ -230,7 +230,7 @@ Devise.setup do |config|
   # should add them to the navigational formats lists.
   #
   # The "*/*" below is required to match Internet Explorer requests.
-  # config.navigational_formats = ['*/*', :html]
+  config.navigational_formats = [:json]
 
   # The default HTTP method used to sign out a resource. Default is :delete.
   config.sign_out_via = :delete
@@ -267,7 +267,7 @@ end
 Rails.application.config.to_prepare do              # to_prepare ensures that the monkey patching happens before the first request
   Devise::OmniauthCallbacksController.class_eval do # reopen the class
     def failure                                     # redefine the failure method
-      set_flash_message! :alert, :failure, kind: OmniAuth::Utils.camelize(failed_strategy.name), reason: failure_message
+      set_flash_message :alert, :failure, kind: OmniAuth::Utils.camelize(failed_strategy.name), reason: failure_message if is_flashing_format?
       redirect_to after_omniauth_failure_path_for(resource_name)
     end
   end
