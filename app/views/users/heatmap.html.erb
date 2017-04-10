@@ -101,7 +101,7 @@
       var mapOptions = {
       zoom: 4,
       center: new google.maps.LatLng(-23.533773, -46.625290),
-      mapTypeId: google.maps.MapTypeId.MAP
+      mapTypeId: google.maps.MapTypeId.SATTELITE
       };
 
       map = new google.maps.Map(document.getElementById('map-canvas'),
@@ -122,7 +122,9 @@
 
       heatmap = new google.maps.visualization.HeatmapLayer({
         data: csv,
-        map: map
+        map: map,
+        radius: $("#radius-slider").slider("value"),
+        opacity: $("#opacity-slider").slider("value")
       });
     }
     
@@ -141,7 +143,7 @@
           range: "min",
           min: 1,
           max: 50,
-          value: 20,
+          value: 30,
           slide: function(event, ui) {
             $("#radius-label").html("radius: " + ui.value);
             if(heatmap == null) return;
@@ -154,7 +156,7 @@
           range: "min",
           min: 0,
           max: 100,
-          value: 50,
+          value: 80,
           slide: function(event, ui) {
             $("#opacity-label").html("opacity: " + ui.value/100);
             if(heatmap == null) return;
@@ -162,18 +164,18 @@
           }
         });
 
-        $( "#max-slider" ).slider({
-          orientation: "horizontal",
-          range: "min",
-          min: 0,
-          max: 1,
-          value: 0,
-          slide: function(event, ui) {
-            $("#max-label").html("max: " + numberWithCommas(ui.value));
-            if(heatmap == null) return;
-            heatmap.set('maxIntensity', ui.value);
-          }
-        });
+        // $( "#max-slider" ).slider({
+        //   orientation: "horizontal",
+        //   range: "min",
+        //   min: 0,
+        //   max: 1,
+        //   value: 0,
+        //   slide: function(event, ui) {
+        //     $("#max-label").html("max: " + numberWithCommas(ui.value));
+        //     if(heatmap == null) return;
+        //     heatmap.set('maxIntensity', ui.value);
+        //   }
+        // });
       });
     });
   </script>
@@ -183,15 +185,15 @@
   <div id="map-canvas"> </div>
 
   <!-- the draggable input and display controls -->
-  <div id="draggable" style="display: none;">
-    <div id="radius-label">radius: 20</div>
+  <div id="draggable">
+    <div id="radius-label">radius: 30</div>
     <div id="radius-slider"></div>
 
-    <div id="opacity-label">opacity: 0.5</div>
+    <div id="opacity-label">opacity: 0.8</div>
     <div id="opacity-slider"></div>
 
-    <div id="max-label">max: -</div>
-    <div id="max-slider"></div>
+    <!-- <div id="max-label">max: -</div>
+    <div id="max-slider"></div> -->
   </div>
 </body>
 
