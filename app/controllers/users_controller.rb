@@ -55,9 +55,7 @@ class UsersController < ApplicationController
   end
 
   def heatmap
-    respond_to do |format|
-      format.csv { render text: User.all.to_csv }
-    end
+    render text: User.all.to_csv
   end
 
   def unregister_device
