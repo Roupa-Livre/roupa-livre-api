@@ -36,7 +36,7 @@
 require 'csv'
 
 class UsersController < ApplicationController
-  before_action :authenticate_user!, except: [:heatmap]
+  before_action :authenticate_user!, except: [:heatmap, :heat_users]
 
   def register_device
     device = Device.find_or_create_by(user: current_user, 
@@ -55,8 +55,13 @@ class UsersController < ApplicationController
   end
 
   def heatmap
-    render text: User.where.not(lat: nil, lng: nil).to_map_csv
+    render template: "users/heatmap.html.erb"
   end
+  def heat_users
+    render text: User.where('lat >= -90 and lat <= 90').where('lng >= -180 and lng <= 180').where.not(lat: nil, lng: nil).to_map_csv.strip
+  end
+
+
 
   def unregister_device
     Device.where(user: current_user, 
