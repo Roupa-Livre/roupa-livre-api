@@ -34,6 +34,7 @@
 #
 
 require 'file_size_validator'
+require 'csv'
 
 class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
@@ -62,7 +63,7 @@ class User < ActiveRecord::Base
   def first_name
     if name && name.length > 1 # pelo menos 2 letras
       names_separator_index = name.index(' ')
-      if names_separator_index > -1
+      if names_separator_index && names_separator_index > -1
         if names_separator_index > 1 # pelo menos 2 letras
           name[0..(names_separator_index-1)]
         else
@@ -87,5 +88,15 @@ class User < ActiveRecord::Base
     REDIS.publish 'refresh_token', data
 
     return result
+  end
+
+  def self.to_map_csv
+    custom_column_names = ["lat", "lng", "public_name"]
+    CSV.generate do |csv|
+      csv << custom_column_names
+      all.each do |user|
+        csv << [user.lat, user.lng, user.public_name]
+      end
+    end
   end
 end

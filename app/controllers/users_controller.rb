@@ -33,8 +33,10 @@
 #  agreed                 :boolean          default(FALSE), not null
 #
 
+require 'csv'
+
 class UsersController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:heatmap]
 
   def register_device
     device = Device.find_or_create_by(user: current_user, 
@@ -50,6 +52,12 @@ class UsersController < ApplicationController
     end
 
     render json: device
+  end
+
+  def heatmap
+    respond_to do |format|
+      format.csv { render text: User.all.to_csv }
+    end
   end
 
   def unregister_device
