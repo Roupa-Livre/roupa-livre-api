@@ -55,7 +55,7 @@ class UsersController < ApplicationController
   end
 
   def heatmap
-    render text: User.all.to_map_csv
+    render text: User.where.not(lat: nil, lng: nil).to_map_csv
   end
 
   def unregister_device
