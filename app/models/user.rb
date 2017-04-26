@@ -90,12 +90,30 @@ class User < ActiveRecord::Base
     return result
   end
 
+  def chats_count
+    Chat.where('user_1_id = ? or user_2_id = ?', self.id, self.id).count
+  end
+
+  def apparels_count
+    self.apparels.count
+  end
+
   def self.to_map_csv
     custom_column_names = ["lat", "lng", "public_name"]
     CSV.generate do |csv|
       csv << custom_column_names
       all.each do |user|
         csv << [user.lat, user.lng, user.public_name]
+      end
+    end
+  end
+
+  def self.to_csv
+    custom_column_names = ["name", "email", "public_name", "nickname", "social_image", "phone", "peças", "chats"]
+    CSV.generate do |csv|
+      csv << custom_column_names
+      all.each do |user|
+        csv << [user.name, user.email, user.public_name, user.nickname, user.social_image ? user.social_image : "", user.phone ? user.phone : "", user.apparels_count, user.chats_count]
       end
     end
   end

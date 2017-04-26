@@ -48,6 +48,20 @@ class Apparel < ActiveRecord::Base
     self.apparel_reports.create(user: user, number: SecureRandom.hex(16), reason: reason)
   end
 
+  def tag_names
+    apparel_tags.map { |t| '#' + t.name }
+  end
+
+  def self.to_csv
+    custom_column_names = ["titulo", "descrição", "tamanho", "genero", "idade", "tags"]
+    CSV.generate do |csv|
+      csv << custom_column_names
+      all.each do |apparel|
+        csv << [apparel.title, apparel.description, apparel.size_info, apparel.gender, apparel.age_info, apparel.tag_names.join(' ')]
+      end
+    end
+  end
+
   protected
     def check_same_name
       if self.similars.count > 0
