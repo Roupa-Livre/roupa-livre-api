@@ -44,16 +44,16 @@ class ApparelsController < ApplicationController
     if current_user.has_geo?
       @apparels = @apparels.where('users.lat is not null and users.lng is not null')
     end
-    if params[:range].present?
-      apparel_range = params[:range].to_i
-      if apparel_range > 0 && apparel_range < 100
-        @apparels = @apparels.within(apparel_range, units: :kms, origin: @current_user)
-      end
+
+    apparel_range = params[:range].to_i if params[:range].present?
+    if apparel_range && apparel_range > 0 && apparel_range < 100
+      @apparels = @apparels.within(apparel_range, units: :kms, origin: @current_user)
+      @apparels = @apparels.order('distance ASC')
+    else
+      @apparels = @apparels.by_distance(:origin => current_user)
     end
 
-    @apparels = @apparels.by_distance(:origin => current_user)
     @apparels = @apparels.joins(:apparel_images).uniq
-
     @apparels = @apparels.limit(params[:page_size] || 10)
 
     render json: @apparels
