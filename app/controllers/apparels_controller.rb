@@ -40,7 +40,15 @@ class ApparelsController < ApplicationController
       end
     end
 
-    @apparels = @apparels.joins(:user).by_distance(:origin => current_user)
+    @apparels = @apparels.joins(:user)
+    if params[:range].present?
+      apparel_range = params[:range].to_i
+      if apparel_range > 0 && apparel_range < 100
+        @apparels = @apparels.within(apparel_range, :origin => @current_user)
+      end
+    end
+
+    @apparels = @apparels.by_distance(:origin => current_user)
     @apparels = @apparels.joins(:apparel_images).uniq
 
     @apparels = @apparels.limit(params[:page_size] || 10)
