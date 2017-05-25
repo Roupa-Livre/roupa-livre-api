@@ -49,7 +49,11 @@ class User < ActiveRecord::Base
   has_many :blocked_users, dependent: :destroy
 
   def km_from_user(other_user)
-    self.distance_from(other_user, :units => :kms) if other_user.lat && other_user.lng
+    self.distance_from(other_user, :units => :kms) if other_user.has_geo?
+  end
+
+  def has_geo?
+    self.lat && self.lng
   end
 
   def masked_email

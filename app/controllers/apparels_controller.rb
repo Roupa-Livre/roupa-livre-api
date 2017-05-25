@@ -41,10 +41,13 @@ class ApparelsController < ApplicationController
     end
 
     @apparels = @apparels.joins(:user)
+    if current_user.has_geo?
+      @apparels = @apparels.where('users.lat is not null and users.lng is not null')
+    end
     if params[:range].present?
       apparel_range = params[:range].to_i
       if apparel_range > 0 && apparel_range < 100
-        @apparels = @apparels.within(apparel_range, :origin => @current_user)
+        @apparels = @apparels.within(apparel_range, units: :kms, origin: @current_user)
       end
     end
 
