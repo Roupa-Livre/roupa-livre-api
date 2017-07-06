@@ -60,8 +60,20 @@ group :logging do
   gem 'google-analytics-rails'
 end
 
+gem 'figaro'
+gem 'puma'
+
 group :development do
   gem 'annotate', '>=2.6.0'
   gem 'spring'
   gem 'letter_opener'
+
+  gem 'capistrano', '3.4.0'
+  gem 'capistrano3-puma'
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano-rvm'
+  gem 'capistrano-rails-console', require: false
+  gem 'capistrano-rake', require: false
+  gem 'capistrano-sidekiq', require: false
 end
