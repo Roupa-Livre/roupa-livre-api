@@ -28,9 +28,12 @@ Rails.application.routes.draw do
   get 'users/heat_users', to: "users#heat_users"
   get 'users/heatmap', to: "users#heatmap"
 
-  mount_devise_token_auth_for 'User', at: 'auth', controllers: { 
-    registrations: 'overrides/registrations', 
-    token_validations: 'overrides/token_validations', 
-    omniauth_callbacks: "overrides/omniauth_callbacks" 
+  mount_devise_token_auth_for 'User', at: 'auth', controllers: {
+    registrations: 'overrides/registrations',
+    token_validations: 'overrides/token_validations',
+    omniauth_callbacks: "overrides/omniauth_callbacks"
   }
-  end
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web, at: '/sidekiq-dashboard'
+end

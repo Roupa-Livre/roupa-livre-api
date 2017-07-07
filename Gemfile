@@ -21,11 +21,11 @@ gem 'tzinfo-data', platforms: [:mswin, :mingw, :jruby, :x64_mingw]
 gem 'geokit-rails'
 
 # workers
-gem 'slim'
 gem 'puma'
 gem 'realtime'
 gem 'redis'
 gem 'redis-namespace'
+gem 'sidekiq', '~> 3.2.6'
 
 #social
 gem 'omniauth'
@@ -37,6 +37,8 @@ gem 'omniauth-google-oauth2'
 # gem 'twitter'
 # gem 'instagram'
 # gem 'google-api-client', require: 'google/api_client'
+
+gem 'slim'
 
 gem "aws-ses", "~> 0.6.0", :require => 'aws/ses'
 

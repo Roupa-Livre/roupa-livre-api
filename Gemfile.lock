@@ -308,6 +308,7 @@ DEPENDENCIES
   redis
   redis-namespace
   rollbar (~> 2.12.0)
+  sidekiq (~> 3.2.6)
   slim
   spring
   tzinfo-data
