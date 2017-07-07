@@ -2,7 +2,7 @@ require 'sidekiq'
 require 'sidekiq/web'
 
 Sidekiq::Web.use(Rack::Auth::Basic) do |user, password|
-  [user, password] == ["admin", "kike1234"]
+  [user, password] == [ENV["SIDEKIQ_ADMIN_USER"] || "admin", ENV["SIDEKIQ_ADMIN_PASS"] || "kike1234"]
 end
 
 Sidekiq.configure_client do |config|
