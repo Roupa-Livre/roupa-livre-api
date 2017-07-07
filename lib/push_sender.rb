@@ -10,7 +10,7 @@ class PushSender
     options = { data: extraData, collapse_key: push_collapse_key}
     options[:data][:title] = title
     options[:data][:message] = message
-    options[:data][:image] = image
+    options[:data][:image] = image if image
 
     response = sender.send(registration_ids, options)
   end
@@ -44,6 +44,6 @@ class PushSender
   def ios_cert_path
     path = "#{Rails.root}/config/apn_credentials/"
     path += Rails.env.production? ? "production-cert.pem" : (ENV["APN_CERTIFICATE_FILE"] ? ENV["APN_CERTIFICATE_FILE"] : "development-cert.pem")
-    return path    
+    return path
   end
 end
