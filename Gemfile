@@ -23,6 +23,7 @@ gem 'geokit-rails'
 # workers
 gem 'puma'
 gem 'realtime'
+gem 'sinatra'
 gem 'redis'
 gem 'redis-namespace'
 gem 'sidekiq', '~> 3.2.6'

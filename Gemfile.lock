@@ -193,6 +193,8 @@ GEM
     puma (3.4.0)
     rack (1.6.5)
     rack-cors (0.4.0)
+    rack-protection (1.5.3)
+      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.5)
@@ -238,6 +240,10 @@ GEM
       json
       redis (>= 3.0.6)
       redis-namespace (>= 1.3.1)
+    sinatra (1.4.7)
+      rack (~> 1.5)
+      rack-protection (~> 1.4)
+      tilt (>= 1.3, < 3)
     slim (3.0.7)
       temple (~> 0.7.6)
       tilt (>= 1.3.3, < 2.1)
@@ -309,6 +315,7 @@ DEPENDENCIES
   redis-namespace
   rollbar (~> 2.12.0)
   sidekiq (~> 3.2.6)
+  sinatra
   slim
   spring
   tzinfo-data
