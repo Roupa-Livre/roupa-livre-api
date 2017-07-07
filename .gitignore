@@ -38,3 +38,5 @@
 
 #sublime
 *.sublime-workspace
+*.sublime-project
+MIGRATION.md
