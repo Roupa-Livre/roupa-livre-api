@@ -22,11 +22,11 @@ class Chat < ActiveRecord::Base
   validates_presence_of :user_1, :user_2
   validates_uniqueness_of :user_1, :scope => :user_2
   validate :check_blocked_users
-  
+
   has_many :chat_messages, -> { order('created_at DESC') }, dependent: :destroy
   has_many :chat_apparels, dependent: :destroy
   has_many :apparels, through: :chat_apparels
-  
+
   after_create :send_push
 
   def self.active_by_user(user1, user2)
@@ -93,7 +93,7 @@ class Chat < ActiveRecord::Base
     recipients = self.other_recipients(user)
     recipients = recipients.select do |other_user|
       blocked_user_ids = other_user.blocked_users.select(:blocked_user_id)
-      result = blocked_user_ids.include? user.id
+      result = !blocked_user_ids.include?(user.id)
       result
     end
     recipients
