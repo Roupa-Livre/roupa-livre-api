@@ -4,10 +4,10 @@ class ReportWorker
 
   def perform()
     puts "Sidekiq for ReportWorker RUNNING"
-    UpdateWorker.perform_in(1.day)
+    ReportWorker.perform_in(1.day)
 
     do_perform
-    puts "Sidekiq for UpdateWorker FINISHED"
+    puts "Sidekiq for ReportWorker FINISHED"
   end
 
   def do_perform
@@ -60,7 +60,7 @@ class ReportWorker
 
   def self.start
     set = Sidekiq::ScheduledSet.new
-    jobs = set.select {|job| job.klass == 'UpdateWorker' }
+    jobs = set.select {|job| job.klass == 'ReportWorker' }
     if jobs.length == 0
       Time.use_zone('Brasilia') do
         currentTime = Time.zone.now
