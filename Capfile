@@ -43,6 +43,6 @@ require 'capistrano/rails/assets' # for asset handling add
 require 'capistrano/rails/migrations' # for running migrations
 require 'capistrano/puma'
 require 'capistrano/sidekiq'
-require 'capistrano/sidekiq/monit' #to require monit tasks # Only for capistrano3
+# require 'capistrano/sidekiq/monit' #to require monit tasks # Only for capistrano3
 require 'capistrano/rails/console'
 require 'capistrano/rake'
