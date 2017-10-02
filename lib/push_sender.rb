@@ -10,7 +10,8 @@ class PushSender
     options = { data: extraData, collapse_key: push_collapse_key}
     options[:data][:title] = title
     options[:data][:message] = message
-    options[:data][:image] = image ? image : 'default_push_icon'
+    options[:data][:image] = image ? image : 'default_push_image'
+    options[:icon] = 'default_push_icon'
 
     response = sender.send(registration_ids, options)
   end
