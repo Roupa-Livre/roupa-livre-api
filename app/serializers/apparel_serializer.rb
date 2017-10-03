@@ -19,6 +19,7 @@ class ApparelSerializer < ActiveModel::Serializer
 
   has_many :apparel_tags
   has_many :apparel_images
+  has_one :apparel_property
 
   belongs_to :user
 

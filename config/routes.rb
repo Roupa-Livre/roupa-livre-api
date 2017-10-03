@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     end
   end
   resources :apparel_ratings, except: [:new, :edit]
+  resources :property_groups, only: [:index]
   resources :apparel_tags, except: [:new, :edit]
   resources :apparel_images, except: [:new, :edit]
   resources :apparels, except: [:new, :edit] do

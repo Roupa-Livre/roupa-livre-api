@@ -31,6 +31,7 @@
 #  lat                    :float
 #  lng                    :float
 #  agreed                 :boolean          default(FALSE), not null
+#  agreed_at              :datetime
 #
 
 require 'test_helper'

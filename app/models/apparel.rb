@@ -29,6 +29,9 @@ class Apparel < ActiveRecord::Base
   has_many :apparel_tags, dependent: :destroy
   accepts_nested_attributes_for :apparel_tags, :allow_destroy => true
 
+  has_one :apparel_property, dependent: :destroy
+  accepts_nested_attributes_for :apparel_property, :allow_destroy => true
+
   has_many :apparel_ratings, dependent: :destroy
   has_many :apparel_reports, dependent: :destroy
   has_many :chat_apparels, dependent: :destroy

@@ -36,7 +36,7 @@ class ApparelsController < ApplicationController
     if params[:apparel_tags].present?
       apparel_tag_names = params[:apparel_tags].split(',')
       apparel_tag_names.each do |tag_name|
-        @apparels = @apparels.where(id: ApparelTag.where('apparel_tags.apparel_id = apparels.id').where('apparel_tags.name = ?', tag_name).select('apparel_tags.apparel_id'))  
+        @apparels = @apparels.where(id: ApparelTag.where('apparel_tags.apparel_id = apparels.id').where('apparel_tags.name = ?', tag_name).select('apparel_tags.apparel_id'))
       end
     end
 
@@ -77,6 +77,9 @@ class ApparelsController < ApplicationController
   # POST /apparels.json
   def create
     load_new_apparel_images(apparel_params) do |final_params|
+      puts final_params[:apparel_property].to_json
+      logger.debug final_params[:apparel_property_attributes].to_json
+      # puts final_params[:apparel][:apparel_property].to_json
       @apparel = Apparel.new(final_params)
       @apparel.user = current_user
       if @apparel.save
@@ -142,8 +145,10 @@ class ApparelsController < ApplicationController
     end
 
     def apparel_params
-      params.require(:apparel).permit(:title, :description, :size_info, :gender, :age_info, 
-        apparel_tags_attributes: [:id, :name, :_destroy], 
+      params.require(:apparel).permit(:title, :description, :size_info, :gender, :age_info,
+        apparel_property_attributes: [:id, :category_id, :kind_id, :model_id, :size_group_id,
+:size_id, :pattern_id, :color_id, :_destroy],
+        apparel_tags_attributes: [:id, :name, :_destroy],
         apparel_images_attributes: [:id, :data, :file, :file_cache, :_destroy])
     end
 
