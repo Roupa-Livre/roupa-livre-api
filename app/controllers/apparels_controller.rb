@@ -56,7 +56,7 @@ class ApparelsController < ApplicationController
     @apparels = @apparels.joins(:apparel_images).uniq
     @apparels = @apparels.limit(params[:page_size] || 10)
 
-    render json: @apparels
+    render json: @apparels, each_serializer: ApparelReadonlySerializer
   end
 
   # GET /apparels/owned

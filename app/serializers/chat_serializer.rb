@@ -21,7 +21,7 @@ class ChatSerializer < ActiveModel::Serializer
   attributes :unread_messages_count, :total_messages_count, :last_message_sent
 
   class CustomApparelSerializer < ActiveModel::Serializer
-    attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info, :main_image
+    attributes :id, :user_id, :title, :description, :main_image
   end
 
   has_many :other_user_apparels, serializer: CustomApparelSerializer do
@@ -54,7 +54,7 @@ class ChatSerializer < ActiveModel::Serializer
         @current_user_last_read = object.user_2_last_read_at
         @other_last_read = object.user_1_last_read_at
         @other_user = object.user_1
-      end      
+      end
     # end
   end
 
@@ -114,5 +114,5 @@ class ChatSerializer < ActiveModel::Serializer
     @last_message_sent
   end
 
-  
+
 end

@@ -14,12 +14,12 @@
 #  deleted_at  :datetime
 #
 
-class ApparelSerializer < ActiveModel::Serializer
+class ApparelReadonlySerializer < ActiveModel::Serializer
   attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info
 
   has_many :apparel_tags
   has_many :apparel_images
-  has_one :apparel_property, serializer: ApparelPropertySerializer
+  has_one :apparel_property, serializer: ApparelPropertyReadonlySerializer
 
   belongs_to :user
 
