@@ -41,9 +41,9 @@ class ApparelsController < ApplicationController
       @apparels = @apparels.where('apparel_properties.id is NULL or apparel_properties.pattern_id = ?', apparel_property["pattern_id"]) if apparel_property["pattern_id"].present?
       @apparels = @apparels.where('apparel_properties.id is NULL or apparel_properties.color_id = ?', apparel_property["color_id"]) if apparel_property["color_id"].present?
     else
-      @apparels = @apparels.where('age_info = ? or apparel_properties.cached_size_group_name like "%?%"', params[:age_info], params[:age_info].camelize) if params[:age_info].present?
+      @apparels = @apparels.where('age_info = ? or apparel_properties.cached_size_group_name like ?', params[:age_info], "%#{params[:age_info].camelize}%") if params[:age_info].present?
       @apparels = @apparels.where('size_info = ? or apparel_properties.cached_size_name = ?', params[:size_info], params[:size_info]) if params[:size_info].present?
-      @apparels = @apparels.where('gender = ? or apparel_properties.cached_model_name like "%?%"', params[:gender], params[:gender].camelize) if params[:gender].present?
+      @apparels = @apparels.where('gender = ? or apparel_properties.cached_model_name like ?', params[:gender], "%#{params[:gender].camelize}%") if params[:gender].present?
     end
 
     if params[:apparel_tags].present?
