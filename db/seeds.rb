@@ -75,26 +75,26 @@ shoes_size_kids = create_group_if_new("shoes_size_kids", "size_id", "Tamanho", 4
 
 # Modelagem
 create_properties("gender_model", [{ code: "feminina", name: "Feminina" }, { code: "masculina", name: "Masculina" }, { code: "neutra", name: "Neutra" }])
-accessories_pattern = create_group_if_new("accessories_pattern", "pattern_id", "Modelagem", 3, "gender_model", category_group, "acessory")
-clothing_pattern = create_group_if_new("clothing_pattern", "pattern_id", "Modelagem", 3, "gender_model", category_group, "clothing")
-shoes_pattern = create_group_if_new("shoes_pattern", "pattern_id", "Modelagem", 3, "gender_model", category_group, "shoes")
+accessories_pattern = create_group_if_new("accessories_model", "model_id", "Modelagem", 5, "gender_model", category_group, "acessory")
+clothing_pattern = create_group_if_new("clothing_model", "model_id", "Modelagem", 5, "gender_model", category_group, "clothing")
+shoes_pattern = create_group_if_new("shoes_model", "model_id", "Modelagem", 5, "gender_model", category_group, "shoes")
 # purses_pattern = create_group_if_new("purse_pattern", "pattern", "Modelagem", 3, "no_options", category_group, "purse")
 
 # Padrão
 create_properties("standard_pattern", [{ code: "Liso", name: "Liso" }, { code: "Estampado", name: "Estampado" }, { code: "Listrado", name: "Listrado" }, { code: "Geométrico", name: "Geométrico" }])
 
-accessories_pattern = create_group_if_new("accessories_pattern", "pattern", "Padrão", 5, "standard_pattern", category_group, "acessory")
-clothing_pattern = create_group_if_new("clothing_pattern", "pattern_id", "Padrão", 5, "standard_pattern", category_group, "clothing")
-shoes_pattern = create_group_if_new("shoes_pattern", "pattern_id", "Padrão", 5, "standard_pattern", category_group, "shoes")
-purses_pattern = create_group_if_new("purse_pattern", "pattern_id", "Padrão", 5, "standard_pattern", category_group, "purse")
+accessories_pattern = create_group_if_new("accessories_pattern", "pattern_id", "Padrão", 6, "standard_pattern", category_group, "acessory")
+clothing_pattern = create_group_if_new("clothing_pattern", "pattern_id", "Padrão", 6, "standard_pattern", category_group, "clothing")
+shoes_pattern = create_group_if_new("shoes_pattern", "pattern_id", "Padrão", 6, "standard_pattern", category_group, "shoes")
+purses_pattern = create_group_if_new("purse_pattern", "pattern_id", "Padrão", 6, "standard_pattern", category_group, "purse")
 
 # Cor
 create_properties("standard_color", [{ code: "Amarela", name: "Amarela" }, { code: "Azul", name: "Azul" }, { code: "Bege", name: "Bege" }, { code: "Branco", name: "Branco" }, { code: "Bronze", name: "Bronze" }, { code: "Caramelo", name: "Caramelo" }, { code: "Cinza", name: "Cinza" }, { code: "Creme", name: "Creme" }, { code: "Coral", name: "Coral" }, { code: "Dourado", name: "Dourado" }, { code: "Glitter", name: "Glitter" }, { code: "Índigo", name: "Índigo" }, { code: "Laranja", name: "Laranja" }, { code: "Lilás", name: "Lilás" }, { code: "Marrom", name: "Marrom" }, { code: "Preto", name: "Preto" }, { code: "Rosa", name: "Rosa" }, { code: "Roxo", name: "Roxo" }, { code: "Turquesa", name: "Turquesa" }, { code: "Verde", name: "Verde" }])
 
-accessories_color = create_group_if_new("accessories_color", "color_id", "Cor", 6, "standard_color", category_group, "acessory")
-clothing_color = create_group_if_new("clothing_color", "color_id", "Cor", 6, "standard_color", category_group, "clothing")
-shoes_color = create_group_if_new("shoes_color", "color_id", "Cor", 6, "standard_color", category_group, "shoes")
-purses_color = create_group_if_new("purse_color", "color_id", "Cor", 6, "standard_color", category_group, "purse")
+accessories_color = create_group_if_new("accessories_color", "color_id", "Cor", 7, "standard_color", category_group, "acessory")
+clothing_color = create_group_if_new("clothing_color", "color_id", "Cor", 7, "standard_color", category_group, "clothing")
+shoes_color = create_group_if_new("shoes_color", "color_id", "Cor", 7, "standard_color", category_group, "shoes")
+purses_color = create_group_if_new("purse_color", "color_id", "Cor", 7, "standard_color", category_group, "purse")
 
 # create_admin_if_new("admin@nucleo235.com.br", "Henrique")
 

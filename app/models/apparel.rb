@@ -36,6 +36,8 @@ class Apparel < ActiveRecord::Base
   has_many :apparel_reports, dependent: :destroy
   has_many :chat_apparels, dependent: :destroy
 
+  before_save :set_old_properties
+
   validate :check_same_name
   validates_presence_of :title, :user
 
@@ -66,6 +68,14 @@ class Apparel < ActiveRecord::Base
   end
 
   protected
+    def set_old_properties
+      if self.apparel_property
+        self.age_info = self.apparel_property.size_group.name if self.apparel_property.size_group
+        self.size_info = self.apparel_property.size.name if self.apparel_property.size
+        self.gender = self.apparel_property.model.name if self.apparel_property.model
+      end
+    end
+
     def check_same_name
       if self.similars.count > 0
         errors.add(:title, :duplicate)
