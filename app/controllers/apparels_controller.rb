@@ -30,9 +30,22 @@ class ApparelsController < ApplicationController
     @apparels =  @apparels.where.not(:user_id => current_user.blocked_users.select(:blocked_user_id))
     @apparels = @apparels.where.not(id: params[:ignore].split(',')) if params[:ignore].present? && !params[:ignore].blank?
 
-    @apparels = @apparels.where(gender: params[:gender]) if params[:gender].present?
-    @apparels = @apparels.where(age_info: params[:age_info]) if params[:age_info].present?
-    @apparels = @apparels.where(size_info: params[:size_info]) if params[:size_info].present?
+    if params[:apparel_property].present?
+      apparel_property = JSON.parse(params[:apparel_property])
+      @apparels = @apparels.joins('left join apparel_properties as apparel_properties on apparel_properties.apparel_id = apparels.id')
+      @apparels = @apparels.where('apparel_properties.category_id = ?', apparel_property["category_id"]) if apparel_property["category_id"].present?
+      @apparels = @apparels.where('apparel_properties.kind_id = ?', apparel_property["kind_id"]) if apparel_property["kind_id"].present?
+      @apparels = @apparels.where('age_info = ? or apparel_properties.size_group_id = ?', Property.find_name(apparel_property["size_group_id"]).upcase[0..2], apparel_property["size_group_id"]) if apparel_property["size_group_id"].present?
+      @apparels = @apparels.where('size_info = ? or apparel_properties.size_id = ?', Property.find_name(apparel_property["size_id"]), apparel_property["size_id"]) if apparel_property["size_id"].present?
+      @apparels = @apparels.where('gender = ? or apparel_properties.model_id = ?', Property.find_name(apparel_property["model_id"]).upcase[0..2], apparel_property["model_id"]) if apparel_property["model_id"].present?
+      @apparels = @apparels.where('apparel_properties.pattern_id = ?', apparel_property["pattern_id"]) if apparel_property["pattern_id"].present?
+      @apparels = @apparels.where('apparel_properties.color_id = ?', apparel_property["color_id"]) if apparel_property["color_id"].present?
+    else
+      @apparels = @apparels.where('age_info = ? or apparel_properties.size_group_name like "%?%"', params[:age_info], params[:age_info].camelize) if params[:age_info].present?
+      @apparels = @apparels.where('size_info = ? or apparel_properties.size_name = ?', params[:size_info], params[:size_info]) if params[:size_info].present?
+      @apparels = @apparels.where('gender = ? or apparel_properties.model_name like "%?%"', params[:gender], params[:gender].camelize) if params[:gender].present?
+    end
+
     if params[:apparel_tags].present?
       apparel_tag_names = params[:apparel_tags].split(',')
       apparel_tag_names.each do |tag_name|

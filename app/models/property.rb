@@ -13,4 +13,9 @@
 
 class Property < ActiveRecord::Base
   belongs_to :property_group
+
+  def self.find_name(id, default = "")
+    item = Property.where(id: id).first
+    item ? item.name : default
+  end
 end
