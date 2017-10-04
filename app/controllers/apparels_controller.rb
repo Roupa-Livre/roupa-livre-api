@@ -30,9 +30,9 @@ class ApparelsController < ApplicationController
     @apparels =  @apparels.where.not(:user_id => current_user.blocked_users.select(:blocked_user_id))
     @apparels = @apparels.where.not(id: params[:ignore].split(',')) if params[:ignore].present? && !params[:ignore].blank?
 
+    @apparels = @apparels.joins('left join apparel_properties as apparel_properties on apparel_properties.apparel_id = apparels.id')
     if params[:apparel_property].present?
       apparel_property = JSON.parse(params[:apparel_property])
-      @apparels = @apparels.joins('left join apparel_properties as apparel_properties on apparel_properties.apparel_id = apparels.id')
       @apparels = @apparels.where('apparel_properties.id is NULL or apparel_properties.category_id = ?', apparel_property["category_id"]) if apparel_property["category_id"].present?
       @apparels = @apparels.where('apparel_properties.id is NULL or apparel_properties.kind_id = ?', apparel_property["kind_id"]) if apparel_property["kind_id"].present?
       @apparels = @apparels.where('age_info = ? or apparel_properties.size_group_id = ?', Property.find_name(apparel_property["size_group_id"]).upcase[0..2], apparel_property["size_group_id"]) if apparel_property["size_group_id"].present?
