@@ -46,3 +46,4 @@ require 'capistrano/sidekiq'
 # require 'capistrano/sidekiq/monit' #to require monit tasks # Only for capistrano3
 require 'capistrano/rails/console'
 require 'capistrano/rake'
+require 'capistrano/rails_tail_log'

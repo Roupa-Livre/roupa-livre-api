@@ -21,7 +21,6 @@ gem 'tzinfo-data', platforms: [:mswin, :mingw, :jruby, :x64_mingw]
 gem 'geokit-rails'
 
 # workers
-gem 'puma'
 gem 'realtime'
 gem 'sinatra'
 gem 'redis'
@@ -79,4 +78,5 @@ group :development do
   gem 'capistrano-rails-console', require: false
   gem 'capistrano-rake', require: false
   gem 'capistrano-sidekiq', require: false
+  gem 'capistrano-rails-tail-log'
 end
