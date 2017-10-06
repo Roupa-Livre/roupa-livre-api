@@ -19,12 +19,12 @@ class PushSender
   def send_ios_push(registration_ids, title, message, image, push_collapse_key, extraData)
     if ios_gateway
       if ios_passphrase
-        sender = Grocer.pusher(certificate: ios_certificate, gateway: ios_gateway, passphrase: passphrase)
+        sender = Grocer.pusher(certificate: ios_certificate, gateway: ios_gateway, passphrase: ios_passphrase)
       else
         sender = Grocer.pusher(certificate: ios_certificate, gateway: ios_gateway)
       end
     elsif ios_passphrase
-      sender = Grocer.pusher(certificate: ios_certificate, passphrase: passphrase)
+      sender = Grocer.pusher(certificate: ios_certificate, passphrase: ios_passphrase)
     else
       sender = Grocer.pusher(certificate: ios_certificate)
     end
