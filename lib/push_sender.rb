@@ -18,7 +18,13 @@ class PushSender
 
   def send_ios_push(registration_ids, title, message, image, push_collapse_key, extraData)
     if ios_gateway
-      sender = Grocer.pusher(certificate: ios_certificate, gateway: ios_gateway)
+      if ios_passphrase
+        sender = Grocer.pusher(certificate: ios_certificate, gateway: ios_gateway, passphrase: passphrase)
+      else
+        sender = Grocer.pusher(certificate: ios_certificate, gateway: ios_gateway)
+      end
+    elsif ios_passphrase
+      sender = Grocer.pusher(certificate: ios_certificate, passphrase: passphrase)
     else
       sender = Grocer.pusher(certificate: ios_certificate)
     end
@@ -47,4 +53,9 @@ class PushSender
     path += Rails.env.production? ? "production-cert.pem" : (ENV["APN_CERTIFICATE_FILE"] ? ENV["APN_CERTIFICATE_FILE"] : "development-cert.pem")
     return path
   end
+
+  private
+    def ios_passphrase
+      ENV['APN_PASSPHRASE']
+    end
 end
