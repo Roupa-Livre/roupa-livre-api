@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
           :recoverable, :rememberable, :trackable,
           :confirmable, :omniauthable
-  
+
   acts_as_mappable
 
   has_many :identities, dependent: :destroy
@@ -121,5 +121,30 @@ class User < ActiveRecord::Base
         csv << [user.name, user.email, user.public_name, user.nickname, user.social_image ? user.social_image : "", user.phone ? user.phone : "", user.apparels_count, user.chats_count]
       end
     end
+  end
+
+  def self.destroy_user_and_dependecies(user_id)
+    ChatMessage.destroy_all(user_id: user_id)
+    ChatApparel.with_deleted.where(chat: Chat.where(user_1_id: user_id)).each { |i| i.really_destroy! }
+    ChatApparel.with_deleted.where(chat: Chat.where(user_2_id: user_id)).each { |i| i.really_destroy! }
+    Chat.destroy_all(user_1_id: user_id)
+    Chat.destroy_all(user_2_id: user_id)
+
+    ApparelImage.with_deleted.where(apparel: Apparel.with_deleted.where(user_id: user_id)).each { |i| i.really_destroy! }
+    ApparelProperty.with_deleted.where(apparel: Apparel.with_deleted.where(user_id: user_id)).each { |i| i.really_destroy! }
+    ApparelRating.with_deleted.where(apparel: Apparel.with_deleted.where(user_id: user_id)).each { |i| i.really_destroy! }
+    ApparelReport.with_deleted.where(apparel: Apparel.with_deleted.where(user_id: user_id)).each { |i| i.really_destroy! }
+    ApparelTag.with_deleted.where(apparel: Apparel.with_deleted.where(user_id: user_id)).each { |i| i.really_destroy! }
+    Apparel.with_deleted.where(user_id: user_id).each { |i| i.really_destroy! }
+
+    ApparelRating.with_deleted.where(user_id: user_id).each { |i| i.really_destroy! }
+    ApparelReport.with_deleted.where(user_id: user_id).each { |i| i.really_destroy! }
+
+    Device.destroy_all(user_id: user_id)
+    Identity.destroy_all(user_id: user_id)
+    BlockedUser.destroy_all(user_id: user_id)
+    BlockedUser.destroy_all(blocked_user_id: user_id)
+
+    User.find(user_id).destroy
   end
 end
