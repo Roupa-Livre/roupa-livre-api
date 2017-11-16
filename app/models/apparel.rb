@@ -58,11 +58,11 @@ class Apparel < ActiveRecord::Base
   end
 
   def self.to_csv
-    custom_column_names = ["titulo", "descrição", "tamanho", "genero", "idade", "tags"]
+    custom_column_names = ["titulo", "descrição", "tamanho", "genero", "idade", "tags", "id peça", "email dono", "nome dono", "id dono"]
     CSV.generate do |csv|
       csv << custom_column_names
       all.each do |apparel|
-        csv << [apparel.title, apparel.description, apparel.size_info, apparel.gender, apparel.age_info, apparel.tag_names.join(' ')]
+        csv << [apparel.title, apparel.description, apparel.size_info, apparel.gender, apparel.age_info, apparel.tag_names.join(' '), apparel.id.to_s, apparel.user.email, apparel.user.name, apparel.user_id.to_s]
       end
     end
   end
