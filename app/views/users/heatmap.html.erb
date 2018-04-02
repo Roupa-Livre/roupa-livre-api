@@ -62,31 +62,40 @@
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
+    function getDataToLatLng(data) {
+      if (data)
+        console.log('loaded data', data.length);
+      var list = [];
+      for(idx in data) {
+        var row = data[idx];
+        var lat = row.lat;
+        var lng = row.lng;
+        // if (inrange(-90,lat,90) && inrange(-180,lng,180))
+        list.push(new google.maps.LatLng(lat, lng))
+      }
+      return list;
+    }
+
     // function handleFileSelect(evt) {
     function startMap() {
       // var file = evt.target.files[0];
-      
-      Papa.parse("http://api.roupalivre.com.br/users/heat_users", {
-        download: true,
-        dynamicTyping: true,
-        header: true,
-        // beforeFirstChunk: function(results) {
-        //   return results.replace(/^.*\n/g,"");
-        // },
-        complete: function(results) {
-          csv = [];
 
-          for(idx in results["data"]) {
-            var row = results["data"][idx];
-            var lat = row.lat;
-            var lng = row.lng;
-            // if (inrange(-90,lat,90) && inrange(-180,lng,180))
-            csv.push(new google.maps.LatLng(lat, lng))
+      var data = <%= @heat_users.to_json %>;
+      if (!data && Array.isArray(data) && data.length > 0 ) {
+        loadHeatmap(getDataToLatLng(data));
+      } else {
+        Papa.parse("http://api.roupalivre.com.br/users/heat_users", {
+          download: true,
+          dynamicTyping: true,
+          header: true,
+          // beforeFirstChunk: function(results) {
+          //   return results.replace(/^.*\n/g,"");
+          // },
+          complete: function(results) {
+            loadHeatmap(getDataToLatLng(results["data"]));
           }
-                    
-          loadHeatmap(csv);
-        }
-      });
+        });
+      }
     }
 
     function inrange(min,number,max){

@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   post 'users/agreed_to_terms', to: "users#agreed_to_terms"
   get 'users/heat_users', to: "users#heat_users"
   get 'users/heatmap', to: "users#heatmap"
+  get 'users/heatcount', to: "users#heatcount"
 
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
     registrations: 'overrides/registrations',
