@@ -11,6 +11,16 @@ su - deploy-roupalivre
 
 Peça credenciais para Mari no email ou verifique se já não estão no seu email.
 
+# Para verificar espaço livre #
+
+```
+# Para listar o disco principal
+df -h | grep /dev/xvda1
+
+# Para listar todos os discos
+df -h
+```
+
 # Para apagar o arquivo temporario #
 
 No server (para apagar o log do Ruby - que fica grande)
