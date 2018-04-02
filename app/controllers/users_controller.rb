@@ -69,7 +69,7 @@ class UsersController < ApplicationController
   def list_heat_user
     filtered_users = User.where('lat >= -90 and lat <= 90').where('lng >= -180 and lng <= 180').where.not(lat: nil, lng: nil)
     filtered_users = filtered_users.where('last_sign_in_at >= ?', (Time.now - 1.day)) if params[:last_24hours].present?
-    filtered_users = filtered_users.where('last_sign_in_at >= ?', params[:last_sign_in_at].to_date) if params[:last_sign_in_at].present?
+    filtered_users = filtered_users.where('last_sign_in_at >= ?', params[:last_sign_in_at].to_time) if params[:last_sign_in_at].present?
     filtered_users
   end
 
