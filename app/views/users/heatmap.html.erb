@@ -80,8 +80,8 @@
     function startMap() {
       // var file = evt.target.files[0];
 
-      var data = <%= @heat_users.to_json %>;
-      if (!data && Array.isArray(data) && data.length > 0 ) {
+      var data = <%= @heat_users.to_json.html_safe %>;
+      if (data && Array.isArray(data) && data.length > 0 ) {
         loadHeatmap(getDataToLatLng(data));
       } else {
         Papa.parse("http://api.roupalivre.com.br/users/heat_users", {
