@@ -29,7 +29,7 @@ gem 'sidekiq', '~> 3.2.6'
 
 #social
 gem 'omniauth'
-gem 'omniauth-facebook', '~> 4.0.0'
+gem 'omniauth-facebook', '~> 5.0.0'
 gem 'omniauth-instagram'
 gem 'omniauth-twitter'
 gem 'omniauth-linkedin'
