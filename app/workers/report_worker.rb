@@ -4,7 +4,7 @@ class ReportWorker
 
   def perform()
     puts "Sidekiq for ReportWorker RUNNING"
-    ReportWorker.perform_in(1.day)
+    ReportWorker.perform_tomorrow
 
     do_perform
     puts "Sidekiq for ReportWorker FINISHED"
@@ -55,6 +55,15 @@ class ReportWorker
       resource.where('created_at <= ?', end_date).count
     else
       resource.all.count
+    end
+  end
+
+  def self.perform_tomorrow
+    Time.use_zone('Brasilia') do
+      currentTime = Time.zone.now
+      scheduleTime = Time.zone.local(currentTime.year,currentTime.month, currentTime.day, 10, 0, 0)
+      scheduleTime = scheduleTime + 1.day
+      ReportWorker.perform_at(scheduleTime)
     end
   end
 
