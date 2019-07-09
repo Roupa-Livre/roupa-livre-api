@@ -15,6 +15,8 @@
 #  user_2_last_read_at :datetime
 #
 
+require 'push_sender'
+
 class Chat < ActiveRecord::Base
   belongs_to :user_1, :class_name => "User"
   belongs_to :user_2, :class_name => "User"

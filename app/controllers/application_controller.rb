@@ -5,15 +5,6 @@ class ApplicationController < ActionController::API
 
   protected
 
-    def set_user_by_token(mapping=nil)
-      result = super(mapping)
-      if result
-        data = { type: 'refresh_token', token: @token, user: @resource.id }.to_json
-        # REDIS.publish 'refresh_token', data
-      end
-      result
-    end
-
     def to_boolean(str)
       str == 'true' || str == "1"
     end

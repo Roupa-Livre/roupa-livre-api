@@ -106,9 +106,9 @@ GEM
       responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
-    devise_token_auth (0.1.37)
-      devise (> 3.5.2, < 4.1)
-      rails (< 6)
+    devise_token_auth (1.1.0)
+      devise (> 3.5.2, < 4.7)
+      rails (>= 4.2.0, < 6)
     erubis (2.7.0)
     faraday (0.11.0)
       multipart-post (>= 1.2, < 3)
@@ -294,7 +294,7 @@ DEPENDENCIES
   carrierwave-aws
   carrierwave_backgrounder
   devise (= 3.5.6)
-  devise_token_auth (= 0.1.37)
+  devise_token_auth (= 1.1.0)
   fcm
   figaro
   geokit-rails

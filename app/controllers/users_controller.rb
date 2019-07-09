@@ -74,7 +74,6 @@ class UsersController < ApplicationController
   end
 
 
-
   def unregister_device
     Device.where(user: current_user, 
         provider: update_device_params[:provider], 
