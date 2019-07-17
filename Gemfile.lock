@@ -325,8 +325,5 @@ DEPENDENCIES
   sprockets (~> 3.7.2)
   tzinfo-data
 
-RUBY VERSION
-   ruby 2.2.4p230
-
 BUNDLED WITH
    1.15.1

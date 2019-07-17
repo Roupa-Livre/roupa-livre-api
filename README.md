@@ -1,3 +1,11 @@
+# Para Setup DEV #
+
+```
+docker-compose build
+docker-compose up
+docker-compose exec website rake db:reset db:migrate db:seed
+```
+
 # Para Conectar #
 
 ```
