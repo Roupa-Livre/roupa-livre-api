@@ -57,6 +57,14 @@ class Apparel < ActiveRecord::Base
     apparel_tags.map { |t| '#' + t.name }
   end
 
+  def tag_names=(value)
+    return if !value
+    
+    value.map do |name| 
+      self.apparel_tags.find_or_initialize_by(name: name)
+    end
+  end
+
   def self.to_csv
     custom_column_names = ["titulo", "descrição", "tamanho", "genero", "idade", "tags", "id peça", "email dono", "nome dono", "id dono"]
     CSV.generate do |csv|
