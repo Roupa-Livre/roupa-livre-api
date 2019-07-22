@@ -18,6 +18,7 @@ services:
     depends_on:
       - 'postgres'
       - 'redis'
+    command: ash ./start-website.sh
     build: .
     ports:
       - '3000:3000'
@@ -33,7 +34,7 @@ services:
       - 'postgres'
       - 'redis'
     build: .
-    command: sidekiq
+    command: ash ./start-sidekiq.sh
     volumes:
       - '.:/app'
     env_file:
