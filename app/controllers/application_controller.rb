@@ -31,14 +31,12 @@ class ApplicationController < ActionController::API
       
       images_attributes.each do |image_attribute|
         if image_attribute[:data].present? && image_attribute[:data] != nil && !image_attribute[:data].empty?
-          puts "CONVERTING"
           # https://gist.github.com/ifightcrime/9291167a0a4367bb55a2
           base64_image = image_attribute[:data]
-          puts base64_image.encoding
 
           filename = "file-" + (added_images.length + 1).to_s
           in_content_type, encoding, image_data = base64_image.split(/[:;,]/)[1..3]
-          
+
           #create a new tempfile named fileupload
           tempfile = Tempfile.new(filename)
           tempfile.binmode
@@ -61,7 +59,6 @@ class ApplicationController < ActionController::API
 
           image_attribute.delete("data")
           image_attribute[:file] = uploaded_file
-          puts "CONVERTED"
         else
           image_attribute.delete("data")
         end

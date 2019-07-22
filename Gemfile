@@ -7,6 +7,7 @@ gem 'active_model_serializers' , "0.10.0.rc4"
 gem 'rack-cors'
 gem 'actionmailer'
 gem 'sprockets', '~>3.7.2'
+gem 'ruby-filemagic', '~> 0.7.2'
 
 gem "paranoia", "~> 2.2"
 gem 'devise', '3.5.6'

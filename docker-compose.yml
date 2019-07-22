@@ -23,6 +23,8 @@ services:
       - '3000:3000'
     volumes:
       - '.:/app'
+    tmpfs:
+      - /app/tmp
     env_file:
       - '.env-docker'
 
