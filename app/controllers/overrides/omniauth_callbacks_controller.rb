@@ -2,7 +2,6 @@ module Overrides
   class OmniauthCallbacksController < DeviseTokenAuth::OmniauthCallbacksController   
     def omniauth_success
       super
-
       if @identity
         @identity.user = @resource
         @identity.save!

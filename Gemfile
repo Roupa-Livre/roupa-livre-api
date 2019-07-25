@@ -9,7 +9,7 @@ gem 'actionmailer'
 
 gem "paranoia", "~> 2.2"
 gem 'devise', '3.5.6'
-gem 'devise_token_auth', '0.1.37'
+gem 'devise_token_auth', '1.1.0'
 gem 'carrierwave'
 gem 'carrierwave-aws'
 gem 'carrierwave_backgrounder'
