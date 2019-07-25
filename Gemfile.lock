@@ -270,6 +270,7 @@ GEM
       thread_safe (~> 0.1)
     warden (1.2.6)
       rack (>= 1.0)
+    wet-health_endpoint (0.2.0)
     xml-simple (1.1.5)
 
 PLATFORMS
@@ -323,6 +324,7 @@ DEPENDENCIES
   slim
   spring
   tzinfo-data
+  wet-health_endpoint
 
 RUBY VERSION
    ruby 2.2.4p230
