@@ -26,6 +26,8 @@ services:
       - '.:/app'
     tmpfs:
       - /app/tmp
+    environment:
+      DATABASE_URL: 'postgres://postgres:@postgres:5432'
     env_file:
       - '.env-docker'
 
@@ -37,6 +39,8 @@ services:
     command: ash ./start-sidekiq.sh
     volumes:
       - '.:/app'
+    environment:
+      DATABASE_URL: 'postgres://postgres:@postgres:5432'
     env_file:
       - '.env-docker'
 
