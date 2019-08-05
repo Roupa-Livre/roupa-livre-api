@@ -105,6 +105,6 @@ class UsersController < ApplicationController
     end
 
     def update_device_params
-      params.permit(:registration_id, :provider, :device_uid)
+      params.require(:user).permit(:registration_id, :provider, :device_uid, :name, :phone, :email)
     end
 end
