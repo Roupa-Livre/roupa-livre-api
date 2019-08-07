@@ -61,16 +61,18 @@ class Chat < ActiveRecord::Base
     user.id == user_1_id || user.id == user_2_id
   end
 
-  def get_last_messages(previous_read_at, user = nil)
+  def get_last_messages(previous_read_at, user = nil, page_size = 20)
     messages = self.chat_messages
     messages = messages.where('created_at > ?', previous_read_at) if previous_read_at
     messages = messages.where.not(user: user) if user
-    messages = messages.limit(20) if !previous_read_at
+    messages = messages.limit(page_size) if !previous_read_at
     messages
   end
 
-  def previous_messages(previous_message_id)
-    self.chat_messages.where('id < ?', previous_message_id)
+  def previous_messages(previous_message_id, page_size = 20)
+    messages = self.chat_messages.where('id < ?', previous_message_id)
+    messages = messages.limit(page_size)
+    messages
   end
 
   def create_chat_apparels
