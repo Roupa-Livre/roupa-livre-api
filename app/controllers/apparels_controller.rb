@@ -80,6 +80,15 @@ class ApparelsController < ApplicationController
     render json: @apparels
   end
 
+  def matched
+    @apparels = Apparel.joins(:chat_apparels).joins(:chat_apparels => :chat)
+      .where.not('apparels.user_id = ? ', current_user.id)
+      .where('user_1_id = ? or user_2_id = ?', current_user.id, current_user.id)
+      .order('chat_apparels.created_at desc')
+
+    render json: @apparels, each_serializer: ApparelReadonlySerializer
+  end
+
   # GET /apparels/1
   # GET /apparels/1.json
   def show

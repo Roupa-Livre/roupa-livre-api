@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resources :apparels, except: [:new, :edit] do
     collection do
       get 'owned'
+      get 'matched'
     end
     member do
       post 'report'

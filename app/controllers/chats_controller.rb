@@ -34,9 +34,9 @@ class ChatsController < ApplicationController
   # GET /chats/active_by_user/1
   # GET /chats/active_by_user/1.json
   def active_by_user
-    @chat = Chat.active_by_user(current_user, User.find(params[:id]))
+    @chat = Chat.active_by_user(current_user, User.find(params[:user_id]))
     if @chat
-      show
+      return show
     else
       render status: :not_found
     end
