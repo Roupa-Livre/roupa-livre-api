@@ -32,6 +32,7 @@
 #  lng                    :float
 #  agreed                 :boolean          default(FALSE), not null
 #  agreed_at              :datetime
+#  address                :string
 #
 
 require 'csv'

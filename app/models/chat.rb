@@ -29,6 +29,7 @@ class Chat < ActiveRecord::Base
   has_many :chat_apparels, dependent: :destroy
   has_many :apparels, through: :chat_apparels
 
+  after_create :create_initial_messages
   after_create :send_push
 
   def self.active_by_user(user1, user2)
@@ -89,6 +90,9 @@ class Chat < ActiveRecord::Base
     if user
       recipients.push(user_1) if user_1_id != user.id
       recipients.push(user_2) if user_2_id != user.id
+    else
+      recipients.push(user_1)
+      recipients.push(user_2)
     end
     recipients
   end
@@ -103,19 +107,49 @@ class Chat < ActiveRecord::Base
     recipients
   end
 
-  def self.find_or_create_chat(user1, user2)
+  def self.find_or_create_chat(user1, user2, user_1_ratings = [], user_2_ratings = [])
     chat = Chat.active_by_user(user1, user2)
+    new_chat = false
     if !chat
       chat = Chat.create(user_1: user1, user_2: user2, user_1_accepted: false, user_2_accepted: false)
+      new_chat = true
     end
     chat.create_chat_apparels
+    if !new_chat
+      chat.create_new_ratings_message(user_1_ratings) if user_1_ratings.length > 0
+      chat.create_new_ratings_message(user_2_ratings) if user_2_ratings.length > 0
+    end
     chat
+  end
+
+  def create_new_ratings_message(new_ratings)
+    valid_ratings = []
+    new_ratings.each do |rating|
+      if ChatMessageApparel.joins(:chat_message)
+          .where('chat_id = ?', self.id)
+          .where('apparel_id = ?', rating.apparel_id).count == 0
+        valid_ratings.push(rating) 
+      end
+    end
+    if valid_ratings.length > 0
+      chat_message = ApparelChatMessage.create(chat: self, user: valid_ratings.first.user)
+      valid_ratings.each do |rating|
+        chat_message.chat_message_apparels.create(chat_message: chat_message, apparel_id: rating.apparel_id)
+      end
+    end
   end
 
   def send_push
     if user_1 && user_2
       do_send_push(user_1, 'Combinou!', self.user_2.public_name + ' também gostou das suas peças ...', nil, 'roupa_new_match', { chat_id: self.id, type: 'match' })
       do_send_push(user_2, 'Combinou!', self.user_1.public_name + ' também gostou das suas peças ...', nil, 'roupa_new_match', { chat_id: self.id, type: 'match' })
+    end
+  end
+
+  def create_initial_messages
+    chat_message = InitialApparelChatMessage.create(chat: self)
+    self.chat_apparels.each do |chat_apparel|
+      chat_message.chat_message_apparels.create(chat_message: chat_message, apparel_id: chat_apparel.apparel_id)
     end
   end
 

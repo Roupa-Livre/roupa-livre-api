@@ -11,14 +11,8 @@
 #  type       :string           default("ChatMessage")
 #
 
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  chat_id: 
-  user_id: 
-  message: MyText
-
-two:
-  chat_id: 
-  user_id: 
-  message: MyText
+class ApparelChatMessage < ChatMessage
+  def message_needed?
+    false
+  end
+end

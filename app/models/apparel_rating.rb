@@ -36,8 +36,10 @@ class ApparelRating < ActiveRecord::Base
         liked_user = self.apparel.user
 
         liked_user_reverse_liked_ratings = liked_user.apparel_ratings.where(apparel: owner_user.apparels, liked: true)
+        puts "cjheck"
         if liked_user_reverse_liked_ratings.length > 0
-          Chat.find_or_create_chat(owner_user, liked_user)
+          puts "cjheck2"
+          Chat.find_or_create_chat(owner_user, liked_user, [self], liked_user_reverse_liked_ratings.to_a)
         end
       end
     end

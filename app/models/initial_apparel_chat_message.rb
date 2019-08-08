@@ -11,14 +11,22 @@
 #  type       :string           default("ChatMessage")
 #
 
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+class InitialApparelChatMessage < ChatMessage
+  def user_needed?
+    false
+  end
+  def message_needed?
+    false
+  end
 
-one:
-  chat_id: 
-  user_id: 
-  message: MyText
+  def send_push
+  end
 
-two:
-  chat_id: 
-  user_id: 
-  message: MyText
+  def self.check_all
+    Chat.all.each do |chat|
+      if chat.chat_messages.where(type: 'InitialApparelChatMessage').length == 0
+        chat.create_initial_messages
+      end
+    end
+  end
+end
