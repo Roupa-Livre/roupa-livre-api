@@ -36,7 +36,7 @@ module Overrides
       end
 
       def configure_account_update_params
-        devise_parameter_sanitizer.for(:account_update).push(:name, :lat, :lng, :name, :phone, :email, :address)
+        devise_parameter_sanitizer.for(:account_update).push(:name, :lat, :lng, :name, :phone, :email, :address, :image)
       end
   end
 end

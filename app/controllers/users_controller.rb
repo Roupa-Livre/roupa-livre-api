@@ -101,7 +101,7 @@ class UsersController < ApplicationController
   protected
 
     def update_image_params
-      params.permit(:image, :image_cache)
+      params.permit(:image, :image_cache, :social_image)
     end
 
     def update_device_params
