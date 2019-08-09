@@ -34,9 +34,12 @@ class ChatsController < ApplicationController
       @chats = @chats.joins("left join chat_messages on chat_messages.chat_id = chats.id")
         .joins("left join chat_apparels on chat_apparels.chat_id = chats.id")
         .joins("left join apparels on apparels.id = chat_apparels.apparel_id")
+        .joins("left join users on users.id != #{current_user.id} 
+          and (users.id = chats.user_1_id or users.id = chats.user_2_id)")
         .where("unaccent(lower(chat_messages.message)) like #{san_term} 
           or unaccent(lower(apparels.title)) like #{san_term}
-          or unaccent(lower(apparels.description)) like #{san_term}")
+          or unaccent(lower(apparels.description)) like #{san_term}
+          or unaccent(lower(users.name)) like #{san_term}")
       @chats = @chats.group(Chat.column_names.map{|col| "chats.#{col}"})
     end
 
