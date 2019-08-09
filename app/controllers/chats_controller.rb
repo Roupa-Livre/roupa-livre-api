@@ -27,6 +27,18 @@ class ChatsController < ApplicationController
     blocked_user_ids = current_user.blocked_users.select(:blocked_user_id)
     @chats = @chats.where.not(:user_1_id => blocked_user_ids)
     @chats = @chats.where.not(:user_2_id => blocked_user_ids)
+    if params[:term].present? && !params[:term].blank?
+      term = "%#{params[:term].gsub("\'", "\\\'").downcase}%"
+      san_term = Apparel.sanitize(term)
+
+      @chats = @chats.joins("left join chat_messages on chat_messages.chat_id = chats.id")
+        .joins("left join chat_apparels on chat_apparels.chat_id = chats.id")
+        .joins("left join apparels on apparels.id = chat_apparels.apparel_id")
+        .where("unaccent(lower(chat_messages.message)) like #{san_term} 
+          or unaccent(lower(apparels.title)) like #{san_term}
+          or unaccent(lower(apparels.description)) like #{san_term}")
+      @chats = @chats.group(Chat.column_names.map{|col| "chats.#{col}"})
+    end
 
     render json: @chats
   end
