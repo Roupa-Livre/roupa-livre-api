@@ -39,7 +39,7 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def send_push
-    recipients = push_recipients
+    recipients = chat.other_non_blocked_recipients(self.user)
     if recipients.length > 0
       do_send_push(recipients, self.user.public_name + ' diz...', self.message, nil, 'roupa_new_message', { chat_id: self.chat_id, type: 'message' })
     end
@@ -53,10 +53,6 @@ class ChatMessage < ActiveRecord::Base
   end
 
   protected
-
-    def push_recipients
-      chat.other_non_blocked_recipients(self.user)
-    end
 
     def do_send_push(users, title, message, image, push_collapse_key, extraData)
       android_ids = Device.where(provider: 'android', user: users).map { |e| e.uid  }

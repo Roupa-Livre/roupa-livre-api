@@ -147,7 +147,7 @@ class Chat < ActiveRecord::Base
   end
 
   def create_initial_messages
-    chat_message = InitialApparelChatMessage.create(chat: self)
+    chat_message = InitialApparelChatMessage.create(chat: self, created_at: self.created_at)
     self.chat_apparels.each do |chat_apparel|
       chat_message.chat_message_apparels.create(chat_message: chat_message, apparel_id: chat_apparel.apparel_id)
     end
