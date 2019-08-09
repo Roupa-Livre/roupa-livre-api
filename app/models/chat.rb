@@ -132,10 +132,11 @@ class Chat < ActiveRecord::Base
       end
     end
     if valid_ratings.length > 0
-      chat_message = ApparelChatMessage.create(chat: self, user: valid_ratings.first.user)
+      chat_message = ApparelChatMessage.new(chat: self, user: valid_ratings.first.user)
       valid_ratings.each do |rating|
-        chat_message.chat_message_apparels.create(chat_message: chat_message, apparel_id: rating.apparel_id)
+        chat_message.chat_message_apparels.new(chat_message: chat_message, apparel_id: rating.apparel_id)
       end
+      chat_message.save!
     end
   end
 
@@ -147,10 +148,11 @@ class Chat < ActiveRecord::Base
   end
 
   def create_initial_messages
-    chat_message = InitialApparelChatMessage.create(chat: self, created_at: self.created_at)
+    chat_message = InitialApparelChatMessage.new(chat: self, created_at: self.created_at)
     self.chat_apparels.each do |chat_apparel|
-      chat_message.chat_message_apparels.create(chat_message: chat_message, apparel_id: chat_apparel.apparel_id)
+      chat_message.chat_message_apparels.new(chat_message: chat_message, apparel_id: chat_apparel.apparel_id)
     end
+    chat_message.save!
   end
 
   protected

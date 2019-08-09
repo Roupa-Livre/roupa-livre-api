@@ -18,6 +18,8 @@ class ChatMessage < ActiveRecord::Base
   belongs_to :user
 
   has_many :chat_message_apparels, dependent: :destroy
+  accepts_nested_attributes_for :chat_message_apparels, :allow_destroy => true
+
   has_many :apparels, through: :chat_message_apparels
 
   validates_presence_of :chat
