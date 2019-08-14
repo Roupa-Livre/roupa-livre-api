@@ -23,6 +23,9 @@ Rails.application.routes.draw do
       get '/remove_reported/:token', to: 'apparels#remove_reported', as: 'remove_reported'
     end
   end
+
+  get 'apparels/apparels_by_user/:user_id', to: "apparels#apparels_by_user"
+
   post 'users/update_image', to: "users#update_image"
   post 'users/register_device', to: "users#register_device"
   post 'users/unregister_device', to: "users#unregister_device"
@@ -30,6 +33,7 @@ Rails.application.routes.draw do
   get 'users/heat_users', to: "users#heat_users"
   get 'users/heatmap', to: "users#heatmap"
   get 'users/heatcount', to: "users#heatcount"
+  
 
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
     registrations: 'overrides/registrations',
