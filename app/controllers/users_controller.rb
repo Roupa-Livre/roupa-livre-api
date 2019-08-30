@@ -83,11 +83,6 @@ class UsersController < ApplicationController
     head :no_content
   end
 
-  def update_image
-    current_user.update(update_image_params)
-    render json: current_user
-  end
-
   def agreed_to_terms
     current_user.agreed = true
     current_user.agreed_at = Time.new
@@ -100,10 +95,6 @@ class UsersController < ApplicationController
   end
 
   protected
-
-    def update_image_params
-      params.permit(:image, :image_cache, :social_image)
-    end
 
     def update_device_params
       params.permit(:registration_id, :provider, :device_uid)

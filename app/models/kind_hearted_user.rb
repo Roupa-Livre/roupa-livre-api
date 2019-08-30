@@ -38,9 +38,6 @@
 class KindHeartedUser < User
   before_save :skip_confirmation!
   
-  mount_uploader :image, UserImageUploader
-  validates :image, allow_blank: true, file_size: { maximum: 3.megabytes.to_i,  message: "O arquivo enviado é muito grande. Tamanho máximo 3 MB."}
-
   has_many :apparels, :foreign_key => "user_id", dependent: :destroy
   accepts_nested_attributes_for :apparels, :allow_destroy => true
 

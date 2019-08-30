@@ -25,6 +25,8 @@ module RoupaLivreIonic
     config.time_zone = 'Brasilia'
     config.i18n.enforce_available_locales = false
 
+    config.autoload_paths += Dir["#{config.root}/lib/**/"]
+
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
     config.middleware.use config.session_store, config.session_options

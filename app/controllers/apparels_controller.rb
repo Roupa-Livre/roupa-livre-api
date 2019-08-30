@@ -24,7 +24,6 @@ class ApparelsController < ApplicationController
   # GET /apparels.json
   def index
     # sleep(3) para testes
-
     @apparels = Apparel.where.not(user: current_user)
     @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
     @apparels = @apparels.where.not(:id => ApparelReport.where(user: current_user).select(:apparel_id))
@@ -100,8 +99,8 @@ class ApparelsController < ApplicationController
   # POST /apparels.json
   def create
     load_new_apparel_images(apparel_params) do |final_params|
-      puts final_params[:apparel_property].to_json
-      logger.debug final_params[:apparel_property_attributes].to_json
+      # puts final_params[:apparel_property].to_json
+      # logger.debug final_params[:apparel_property_attributes].to_json
       # puts final_params[:apparel][:apparel_property].to_json
       @apparel = Apparel.new(final_params)
       @apparel.user = current_user

@@ -40,6 +40,8 @@ require 'csv'
 
 class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
+  include ModelWithFile
+
   # Include default devise modules.
   devise :database_authenticatable, :registerable,
           :recoverable, :rememberable, :trackable,
@@ -49,6 +51,9 @@ class User < ActiveRecord::Base
 
   has_many :identities, dependent: :destroy
   has_many :blocked_users, dependent: :destroy
+
+  mount_uploader :image, UserImageUploader
+  validates :image, allow_blank: true, file_size: { maximum: 3.megabytes.to_i,  message: "O arquivo enviado é muito grande. Tamanho máximo 3 MB."}
 
   def km_from_user(other_user)
     self.distance_from(other_user, :units => :kms) if other_user.has_geo?
@@ -148,4 +153,9 @@ class User < ActiveRecord::Base
 
     User.find(user_id).destroy
   end
+
+  protected
+    def set_file(new_file)
+      self.image = new_file
+    end
 end
