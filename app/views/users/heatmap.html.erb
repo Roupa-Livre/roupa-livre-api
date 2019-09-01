@@ -84,7 +84,7 @@
       if (data && Array.isArray(data) && data.length > 0 ) {
         loadHeatmap(getDataToLatLng(data));
       } else {
-        Papa.parse("http://api.roupalivre.com.br/users/heat_users", {
+        Papa.parse("https://api.roupalivre.com.br/users/heat_users", {
           download: true,
           dynamicTyping: true,
           header: true,
