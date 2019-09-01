@@ -1,0 +1,20 @@
+# == Schema Information
+#
+# Table name: chat_message_apparels
+#
+#  id              :integer          not null, primary key
+#  chat_message_id :integer
+#  apparel_id      :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  chat_message_id: 
+  apparel_id: 
+
+two:
+  chat_message_id: 
+  apparel_id: 

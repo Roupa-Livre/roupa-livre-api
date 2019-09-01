@@ -57,6 +57,38 @@ class Apparel < ActiveRecord::Base
     apparel_tags.map { |t| '#' + t.name }
   end
 
+  def tag_names=(value)
+    return if !value
+    
+    value.map do |name| 
+      self.apparel_tags.find_or_initialize_by(name: name)
+    end
+  end
+
+  def matches
+    self.chat_apparels.count
+  end
+
+  def likes
+    self.apparel_ratings.where(liked: true).count
+  end
+
+  def deslikes
+    self.apparel_ratings.where.not(liked: true).count
+  end
+
+  def last_month_matches
+    self.chat_apparels.where('created_at > ?', Time.now - 1.month).count
+  end
+
+  def last_month_likes
+    self.apparel_ratings.where('created_at > ?', Time.now - 1.month).where(liked: true).count
+  end
+
+  def last_month_deslikes
+    self.apparel_ratings.where('created_at > ?', Time.now - 1.month).where.not(liked: true).count
+  end
+
   def self.to_csv
     custom_column_names = ["titulo", "descrição", "tamanho", "genero", "idade", "tags", "id peça", "email dono", "nome dono", "id dono"]
     CSV.generate do |csv|

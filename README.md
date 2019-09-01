@@ -1,3 +1,11 @@
+# Para Setup DEV #
+
+```
+docker-compose build
+docker-compose up
+docker-compose exec website rake db:reset db:migrate db:seed
+```
+
 # Para Conectar #
 
 ```
@@ -25,7 +33,7 @@ df -h
 
 No server (para apagar o log do Ruby - que fica grande)
 ```
-sudo rm home/deploy-roupalivre/roupa-livre-api/shared/log/production.log -f
+sudo rm /home/deploy-roupalivre/roupa-livre-api/shared/log/production.log -f
 sudo lsof | grep deleted
 
 # PID que tiver associado ao log acima

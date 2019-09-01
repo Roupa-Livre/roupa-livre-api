@@ -1,0 +1,49 @@
+version: '2'
+
+services:
+  postgres:
+    image: 'postgres:10.3-alpine'
+    volumes:
+      - 'postgres:/var/lib/postgresql/data'
+    env_file:
+      - '.env-docker'
+
+  redis:
+    image: 'redis:4.0-alpine'
+    command: redis-server
+    volumes:
+      - 'redis:/data'
+
+  website:
+    depends_on:
+      - 'postgres'
+      - 'redis'
+    command: ash ./start-website.sh
+    build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - '.:/app'
+    tmpfs:
+      - /app/tmp
+    environment:
+      DATABASE_URL: 'postgres://postgres:@postgres:5432'
+    env_file:
+      - '.env-docker'
+
+  sidekiq:
+    depends_on:
+      - 'postgres'
+      - 'redis'
+    build: .
+    command: ash ./start-sidekiq.sh
+    volumes:
+      - '.:/app'
+    environment:
+      DATABASE_URL: 'postgres://postgres:@postgres:5432'
+    env_file:
+      - '.env-docker'
+
+volumes:
+  redis:
+  postgres:

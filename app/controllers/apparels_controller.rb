@@ -15,7 +15,8 @@
 #
 
 class ApparelsController < ApplicationController
-  before_action :authenticate_user!, except: [:remove_reported]
+  before_action :authenticate_user!, except: [:remove_reported, :apparels_by_user]
+  before_action :apparels_by_user, only: [:show]
   before_action :set_apparel, only: [:show, :update, :destroy, :like, :dislike, :report, :remove_reported]
   before_action :check_apparel_owner, only: [:show, :update, :destroy]
 
@@ -23,7 +24,6 @@ class ApparelsController < ApplicationController
   # GET /apparels.json
   def index
     # sleep(3) para testes
-
     @apparels = Apparel.where.not(user: current_user)
     @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
     @apparels = @apparels.where.not(:id => ApparelReport.where(user: current_user).select(:apparel_id))
@@ -80,6 +80,15 @@ class ApparelsController < ApplicationController
     render json: @apparels
   end
 
+  def matched
+    @apparels = Apparel.joins(:chat_apparels).joins(:chat_apparels => :chat)
+      .where.not('apparels.user_id = ? ', current_user.id)
+      .where('user_1_id = ? or user_2_id = ?', current_user.id, current_user.id)
+      .order('chat_apparels.created_at desc')
+
+    render json: @apparels, each_serializer: ApparelReadonlySerializer
+  end
+
   # GET /apparels/1
   # GET /apparels/1.json
   def show
@@ -90,8 +99,8 @@ class ApparelsController < ApplicationController
   # POST /apparels.json
   def create
     load_new_apparel_images(apparel_params) do |final_params|
-      puts final_params[:apparel_property].to_json
-      logger.debug final_params[:apparel_property_attributes].to_json
+      # puts final_params[:apparel_property].to_json
+      # logger.debug final_params[:apparel_property_attributes].to_json
       # puts final_params[:apparel][:apparel_property].to_json
       @apparel = Apparel.new(final_params)
       @apparel.user = current_user
@@ -144,6 +153,12 @@ class ApparelsController < ApplicationController
     head :no_content
   end
 
+  def apparels_by_user
+    @apparels = Apparel.where(user_id: params[:user_id])
+
+    render json: @apparels
+  end
+
   private
 
     def set_apparel
@@ -168,4 +183,5 @@ class ApparelsController < ApplicationController
     def report_params
       params.require(:apparel).permit(:reason)
     end
+
 end

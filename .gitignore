@@ -40,3 +40,7 @@
 *.sublime-workspace
 *.sublime-project
 MIGRATION.md
+
+.env
+Procfile.dev
+dump.rdb

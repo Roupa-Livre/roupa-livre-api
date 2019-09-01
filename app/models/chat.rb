@@ -15,6 +15,8 @@
 #  user_2_last_read_at :datetime
 #
 
+require 'push_sender'
+
 class Chat < ActiveRecord::Base
   belongs_to :user_1, :class_name => "User"
   belongs_to :user_2, :class_name => "User"
@@ -27,6 +29,7 @@ class Chat < ActiveRecord::Base
   has_many :chat_apparels, dependent: :destroy
   has_many :apparels, through: :chat_apparels
 
+  after_create :create_initial_messages
   after_create :send_push
 
   def self.active_by_user(user1, user2)
@@ -59,16 +62,18 @@ class Chat < ActiveRecord::Base
     user.id == user_1_id || user.id == user_2_id
   end
 
-  def get_last_messages(previous_read_at, user = nil)
+  def get_last_messages(previous_read_at, user = nil, page_size = 20)
     messages = self.chat_messages
     messages = messages.where('created_at > ?', previous_read_at) if previous_read_at
     messages = messages.where.not(user: user) if user
-    messages = messages.limit(20) if !previous_read_at
+    messages = messages.limit(page_size) if !previous_read_at
     messages
   end
 
-  def previous_messages(previous_message_id)
-    self.chat_messages.where('id < ?', previous_message_id)
+  def previous_messages(previous_message_id, page_size = 20)
+    messages = self.chat_messages.where('id < ?', previous_message_id)
+    messages = messages.limit(page_size)
+    messages
   end
 
   def create_chat_apparels
@@ -85,6 +90,9 @@ class Chat < ActiveRecord::Base
     if user
       recipients.push(user_1) if user_1_id != user.id
       recipients.push(user_2) if user_2_id != user.id
+    else
+      recipients.push(user_1)
+      recipients.push(user_2)
     end
     recipients
   end
@@ -99,13 +107,37 @@ class Chat < ActiveRecord::Base
     recipients
   end
 
-  def self.find_or_create_chat(user1, user2)
+  def self.find_or_create_chat(user1, user2, user_1_ratings = [], user_2_ratings = [])
     chat = Chat.active_by_user(user1, user2)
+    new_chat = false
     if !chat
       chat = Chat.create(user_1: user1, user_2: user2, user_1_accepted: false, user_2_accepted: false)
+      new_chat = true
     end
     chat.create_chat_apparels
+    if !new_chat
+      chat.create_new_ratings_message(user_1_ratings) if user_1_ratings.length > 0
+      chat.create_new_ratings_message(user_2_ratings) if user_2_ratings.length > 0
+    end
     chat
+  end
+
+  def create_new_ratings_message(new_ratings)
+    valid_ratings = []
+    new_ratings.each do |rating|
+      if ChatMessageApparel.joins(:chat_message)
+          .where('chat_id = ?', self.id)
+          .where('apparel_id = ?', rating.apparel_id).count == 0
+        valid_ratings.push(rating) 
+      end
+    end
+    if valid_ratings.length > 0
+      chat_message = ApparelChatMessage.new(chat: self, user: valid_ratings.first.user)
+      valid_ratings.each do |rating|
+        chat_message.chat_message_apparels.new(chat_message: chat_message, apparel_id: rating.apparel_id)
+      end
+      chat_message.save!
+    end
   end
 
   def send_push
@@ -113,6 +145,14 @@ class Chat < ActiveRecord::Base
       do_send_push(user_1, 'Combinou!', self.user_2.public_name + ' também gostou das suas peças ...', nil, 'roupa_new_match', { chat_id: self.id, type: 'match' })
       do_send_push(user_2, 'Combinou!', self.user_1.public_name + ' também gostou das suas peças ...', nil, 'roupa_new_match', { chat_id: self.id, type: 'match' })
     end
+  end
+
+  def create_initial_messages
+    chat_message = InitialApparelChatMessage.new(chat: self, created_at: self.created_at)
+    self.chat_apparels.each do |chat_apparel|
+      chat_message.chat_message_apparels.new(chat_message: chat_message, apparel_id: chat_apparel.apparel_id)
+    end
+    chat_message.save!
   end
 
   protected

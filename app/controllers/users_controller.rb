@@ -32,6 +32,7 @@
 #  lng                    :float
 #  agreed                 :boolean          default(FALSE), not null
 #  agreed_at              :datetime
+#  address                :string
 #
 
 require 'csv'
@@ -74,18 +75,12 @@ class UsersController < ApplicationController
   end
 
 
-
   def unregister_device
     Device.where(user: current_user, 
         provider: update_device_params[:provider], 
         device_uid: update_device_params[:device_uid]).destroy_all
     
     head :no_content
-  end
-
-  def update_image
-    current_user.update(update_image_params)
-    render json: current_user
   end
 
   def agreed_to_terms
@@ -100,10 +95,6 @@ class UsersController < ApplicationController
   end
 
   protected
-
-    def update_image_params
-      params.permit(:image, :image_cache)
-    end
 
     def update_device_params
       params.permit(:registration_id, :provider, :device_uid)

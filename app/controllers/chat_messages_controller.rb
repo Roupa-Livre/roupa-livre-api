@@ -4,10 +4,11 @@
 #
 #  id         :integer          not null, primary key
 #  chat_id    :integer          not null
-#  user_id    :integer          not null
-#  message    :text             not null
+#  user_id    :integer
+#  message    :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  type       :string           default("ChatMessage")
 #
 
 class ChatMessagesController < ApplicationController
@@ -29,9 +30,9 @@ class ChatMessagesController < ApplicationController
         if params[:last_read_at].present?
           @chat_messages = chat.get_last_messages(params[:last_read_at].to_time)
         elsif params[:base_message_id].present?
-          @chat_messages = chat.previous_messages(params[:base_message_id].to_i)
+          @chat_messages = chat.previous_messages(params[:base_message_id].to_i, params[:page_size].to_i)
         else
-          @chat_messages = chat.get_last_messages(nil)
+          @chat_messages = chat.get_last_messages(nil, nil, params[:page_size].to_i)
         end
         chat.mark_as_read(current_user)
       end
