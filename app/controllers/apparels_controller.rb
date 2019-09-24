@@ -23,7 +23,7 @@ class ApparelsController < ApplicationController
   # GET /apparels
   # GET /apparels.json
   def index
-    # sleep(3) para testes
+    # sleep(20) # para testes
     @apparels = Apparel.where.not(user: current_user)
     @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
     @apparels = @apparels.where.not(:id => ApparelReport.where(user: current_user).select(:apparel_id))
@@ -85,6 +85,23 @@ class ApparelsController < ApplicationController
       .where.not('apparels.user_id = ? ', current_user.id)
       .where('user_1_id = ? or user_2_id = ?', current_user.id, current_user.id)
       .order('chat_apparels.created_at desc')
+
+    if params[:term].present? && !params[:term].blank?
+      term = "%#{params[:term].gsub("\'", "\\\'").downcase}%"
+      san_term = Apparel.sanitize(term)
+
+      @apparels = @apparels.joins("left join chat_messages on chat_messages.chat_id = chats.id")
+        .joins("left join users on users.id != #{current_user.id} 
+          and (users.id = chats.user_1_id or users.id = chats.user_2_id)")
+        .where("unaccent(lower(chat_messages.message)) like #{san_term} 
+          or unaccent(lower(apparels.title)) like #{san_term}
+          or unaccent(lower(apparels.description)) like #{san_term}
+          or unaccent(lower(users.name)) like #{san_term}")
+
+      group_by = Apparel.column_names.map{|col| "apparels.#{col}"}
+      group_by.push('chat_apparels.created_at')
+      @apparels = @apparels.group(group_by);
+    end
 
     render json: @apparels, each_serializer: ApparelReadonlySerializer
   end
