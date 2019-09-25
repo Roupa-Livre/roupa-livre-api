@@ -18,7 +18,7 @@ class ApparelSerializer < ActiveModel::Serializer
   attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info
   attributes :likes, :deslikes, :matches, :last_month_likes, :last_month_deslikes, :last_month_matches
 
-  has_many :apparel_tags
+  has_many :apparel_tags, serializer: ApparelTagSerializer
   has_many :apparel_images
   has_one :apparel_property, serializer: ApparelPropertySerializer
 

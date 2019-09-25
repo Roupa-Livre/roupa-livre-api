@@ -10,12 +10,10 @@
 #  global_tag_id :integer          not null
 #
 
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+class ApparelTagSerializer < ActiveModel::Serializer
+  attributes :id, :name, :global_tag_id
 
-one:
-  apparel_id: 
-  name: MyString
-
-two:
-  apparel_id: 
-  name: MyString
+  def name
+    object.global_tag.name
+  end
+end

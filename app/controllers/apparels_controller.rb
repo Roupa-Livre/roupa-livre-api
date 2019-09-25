@@ -15,8 +15,8 @@
 #
 
 class ApparelsController < ApplicationController
-  before_action :authenticate_user!, except: [:remove_reported, :apparels_by_user]
-  before_action :apparels_by_user, only: [:show]
+  before_action :authenticate_user!, except: [:remove_reported, :apparels_by_user, :apparels_by_tag]
+  # before_action :apparels_by_user, only: [:show]
   before_action :set_apparel, only: [:show, :update, :destroy, :like, :dislike, :report, :remove_reported]
   before_action :check_apparel_owner, only: [:show, :update, :destroy]
 
@@ -172,6 +172,14 @@ class ApparelsController < ApplicationController
 
   def apparels_by_user
     @apparels = Apparel.where(user_id: params[:user_id])
+
+    render json: @apparels
+  end
+
+  def apparels_by_tag
+    @apparels = Apparel.joins(:apparel_tags).joins(apparel_tags: :global_tag)
+      .where('global_tags.id = ?', params[:tag_id])
+      .where('apparels.user_id <> ?', current_user.id)
 
     render json: @apparels
   end

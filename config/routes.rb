@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   end
 
   get 'apparels/apparels_by_user/:user_id', to: "apparels#apparels_by_user"
+  get 'apparels/apparels_by_tag/:tag_id', to: "apparels#apparels_by_tag"
 
   post 'users/update_image', to: "users#update_image"
   post 'users/register_device', to: "users#register_device"

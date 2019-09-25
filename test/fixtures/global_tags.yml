@@ -1,0 +1,23 @@
+# == Schema Information
+#
+# Table name: global_tags
+#
+#  id         :integer          not null, primary key
+#  name       :string
+#  descrition :string
+#  body       :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  descrition: MyString
+  body: MyText
+
+two:
+  name: MyString
+  descrition: MyString
+  body: MyText
