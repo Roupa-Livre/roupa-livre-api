@@ -2,7 +2,7 @@ class CreateGlobalTags < ActiveRecord::Migration
   def change
     create_table :global_tags do |t|
       t.string :name
-      t.string :descrition, null: true
+      t.string :description, null: true
       t.text :body, null: true
 
       t.timestamps null: false
@@ -11,7 +11,7 @@ class CreateGlobalTags < ActiveRecord::Migration
 
   def data
     ApparelTag.all.distinct(:name).each do |tag|
-      GlobalTag.create!(name: tag.name)
+      GlobalTag.create!(name: tag[:name].downcase)
     end
   end
 end

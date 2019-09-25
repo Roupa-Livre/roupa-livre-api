@@ -61,7 +61,7 @@ class Apparel < ActiveRecord::Base
     return if !value
     
     value.map do |name| 
-      self.apparel_tags.find_or_initialize_by(global_tag: GlobalTag.find_or_create_by(name: name))
+      self.apparel_tags.find_or_initialize_by(global_tag: GlobalTag.find_or_create_by(name: name.downcase))
     end
   end
 

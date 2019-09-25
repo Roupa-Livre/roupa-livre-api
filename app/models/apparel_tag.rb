@@ -20,8 +20,8 @@ class ApparelTag < ActiveRecord::Base
   attr_accessor :name
 
   def check_name_changed
-    if self.name && !self.name.empty? && (!self.global_tag || self.global_tag.name != self.name)
-      self.global_tag = GlobalTag.find_or_create_by(name: self.name)
+    if self.name && !self.name.empty? && (!self.global_tag || self.global_tag.name != self.name.downcase)
+      self.global_tag = GlobalTag.find_or_create_by(name: self.name.downcase)
     end
   end
 end
