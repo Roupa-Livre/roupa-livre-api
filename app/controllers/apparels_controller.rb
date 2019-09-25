@@ -25,7 +25,6 @@ class ApparelsController < ApplicationController
   def index
     # sleep(20) # para testes
     @apparels = Apparel.where.not(user: current_user)
-    @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
     @apparels = @apparels.where.not(:id => ApparelReport.where(user: current_user).select(:apparel_id))
     @apparels =  @apparels.where.not(:user_id => current_user.blocked_users.select(:blocked_user_id))
     @apparels = @apparels.where.not(id: params[:ignore].split(',')) if params[:ignore].present? && !params[:ignore].blank?
@@ -87,6 +86,31 @@ class ApparelsController < ApplicationController
       @apparels = @apparels.order('distance ASC')
     else
       @apparels = @apparels.by_distance(:origin => current_user)
+    end
+
+    if params[:show_only_liked].present? && to_boolean(params[:show_only_liked])
+      @apparels = @apparels.where(user_id: Apparel.joins(:apparel_ratings).where(:apparel_ratings => { liked: true, user_id: current_user.id }).select(:user_id).distinct)
+    end
+
+    if params[:show_only_likers].present? && to_boolean(params[:show_only_likers])
+      @apparels = @apparels.where(user_id: ApparelRating.joins(:apparel).where(liked: true).where(:apparels => { user_id: current_user.id }).select(:user_id).distinct)
+    end
+
+    show_liked_again = params[:show_liked_again].present? && to_boolean(params[:show_liked_again])
+    show_not_liked_again = params[:show_not_liked_again].present? && to_boolean(params[:show_not_liked_again])
+    if show_liked_again != show_not_liked_again
+      if show_liked_again
+        @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user, liked: true).select(:apparel_id))
+      else
+        @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user, liked: false).select(:apparel_id))
+      end
+    elsif !show_liked_again && !show_not_liked_again
+      @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
+    end
+
+    if params[:already_seen_ids].present?
+      already_seen_ids = params[:already_seen_ids].split(',').map { |id_str| id_str.to_i }
+      @apparels = @apparels.where.not(id: already_seen_ids)
     end
 
     @apparels = @apparels.joins(:apparel_images).uniq

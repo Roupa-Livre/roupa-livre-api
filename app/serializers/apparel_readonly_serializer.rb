@@ -15,7 +15,7 @@
 #
 
 class ApparelReadonlySerializer < ActiveModel::Serializer
-  attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info
+  attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info, :already_rated
 
   has_many :apparel_tags
   has_many :apparel_images
@@ -27,5 +27,9 @@ class ApparelReadonlySerializer < ActiveModel::Serializer
     data = super
     data[:distance] = current_user.km_from_user(object.user) if current_user && current_user.id != object.user_id
     data
+  end
+
+  def already_rated
+    object.apparel_ratings.where(user: current_user).count > 0
   end
 end
