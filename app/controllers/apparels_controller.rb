@@ -72,7 +72,7 @@ class ApparelsController < ApplicationController
     if params[:apparel_tags].present?
       apparel_tag_names = params[:apparel_tags].split(',')
       apparel_tag_names.each do |tag_name|
-        @apparels = @apparels.where(id: ApparelTag.where('apparel_tags.apparel_id = apparels.id').where('apparel_tags.name = ?', tag_name).select('apparel_tags.apparel_id'))
+        @apparels = @apparels.where(id: ApparelTag.joins(:global_tag).where('apparel_tags.apparel_id = apparels.id').where('global_tags.name = ?', tag_name).select('apparel_tags.apparel_id'))
       end
     end
 
