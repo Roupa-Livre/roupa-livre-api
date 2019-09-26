@@ -145,6 +145,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
+    migration_data (0.3.1)
     mime-types (3.0)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0221)
@@ -303,6 +304,7 @@ DEPENDENCIES
   grocer
   kaminari
   letter_opener
+  migration_data
   omniauth
   omniauth-facebook (~> 5.0.0)
   omniauth-google-oauth2
@@ -326,6 +328,9 @@ DEPENDENCIES
   sprockets (~> 3.7.2)
   tzinfo-data
   wet-health_endpoint
+
+RUBY VERSION
+   ruby 2.2.4p230
 
 BUNDLED WITH
    1.15.1

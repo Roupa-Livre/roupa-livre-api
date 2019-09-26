@@ -2,15 +2,15 @@
 #
 # Table name: apparel_tags
 #
-#  id         :integer          not null, primary key
-#  apparel_id :integer          not null
-#  name       :string           not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  deleted_at :datetime
+#  id            :integer          not null, primary key
+#  apparel_id    :integer          not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  deleted_at    :datetime
+#  global_tag_id :integer          not null
 #
 
-class ApparelTagsController < ApplicationController
+class ApparelTagsController < APIController
   before_action :set_apparel_tag, only: [:show, :update, :destroy]
 
   # GET /apparel_tags

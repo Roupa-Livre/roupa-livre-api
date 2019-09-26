@@ -15,7 +15,7 @@
 #  updated_at         :datetime         not null
 #
 
-class PropertyGroupsController < ApplicationController
+class PropertyGroupsController < APIController
   # GET /property_groups
   # GET /property_groups.json
   def index

@@ -54,14 +54,14 @@ class Apparel < ActiveRecord::Base
   end
 
   def tag_names
-    apparel_tags.map { |t| '#' + t.name }
+    apparel_tags.map { |t| '#' + t.global_tag.name }
   end
 
   def tag_names=(value)
     return if !value
     
     value.map do |name| 
-      self.apparel_tags.find_or_initialize_by(name: name)
+      self.apparel_tags.find_or_initialize_by(global_tag: GlobalTag.find_or_create_by(name: name.downcase))
     end
   end
 

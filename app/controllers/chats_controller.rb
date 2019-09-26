@@ -15,7 +15,7 @@
 #  user_2_last_read_at :datetime
 #
 
-class ChatsController < ApplicationController
+class ChatsController < APIController
   before_action :authenticate_user!
   before_action :set_chat, only: [:show, :update, :destroy, :block]
 

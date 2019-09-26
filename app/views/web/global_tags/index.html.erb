@@ -1,0 +1,66 @@
+<div class="container-fluid dashboard-content">
+  <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="page-header">
+              <h2 class="pageheader-title"></h2>
+              <div class="page-breadcrumb">
+                  <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="<%= web_root_path %>" class="breadcrumb-link">Dashboard</a></li>
+                          <li class="breadcrumb-item active" aria-current="page">Tags</li>
+                      </ol>
+                  </nav>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card">
+        <div class="card-header d-flex">
+          <h4 class="card-header-title">
+            <%= @showing_all ? 'Todas Tags' : 'Tags Personalizadas' %>
+          </h4>
+          <div class="toolbar ml-auto">
+              <% if !@showing_all %><a href="<%= web_global_tags_path %>?all=true" class="btn btn-primary btn-sm ">Ver Todas</a><% end %>
+              <% if @showing_all %><a href="<%= web_global_tags_path %>" class="btn btn-primary btn-sm ">Ver Personalizadas</a><% end %>
+          </div>
+        </div>
+        <div class="card-body">
+            <p id="notice"><%= notice %></p>
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nome</th>
+                  <th>Personalizada?</th>
+                  <th>Menções</th>
+                  <th colspan="1"></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <% @global_tags.each do |global_tag| %>
+                  <tr>
+                    <td><%= global_tag.id %></td>
+                    <td><%= global_tag.name %></td>
+                    <td><%= !global_tag.description.blank? || !global_tag.body.blank? ? 'Sim' : '' %></td>
+                    <td><%= global_tag.apparel_tags.count %></td>
+                    <!-- <td><%= link_to 'Ver', web_global_tag_path(global_tag) %></td> -->
+                    <td><%= link_to 'Editar', edit_web_global_tag_path(global_tag) %></td>
+                    <!-- <td><%= link_to 'Apagar', web_global_tag_path(global_tag), method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+
+            <br>
+
+            <%= link_to 'Criar Tag nova', new_web_global_tag_path %>
+        </div>
+    </div>
+
+    </div>
+  </div>
+</div>

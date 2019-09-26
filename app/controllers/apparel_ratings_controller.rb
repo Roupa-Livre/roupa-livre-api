@@ -11,7 +11,7 @@
 #  deleted_at :datetime
 #
 
-class ApparelRatingsController < ApplicationController
+class ApparelRatingsController < APIController
   before_action :authenticate_user!
   before_action :set_apparel_rating, only: [:show, :update, :destroy]
 

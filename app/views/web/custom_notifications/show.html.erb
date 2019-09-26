@@ -1,0 +1,90 @@
+<style>
+  .body-field-preview-container {
+    height: 0;
+    overflow: hidden;
+    padding-top: 177%;
+    position: relative;
+    border: solid 1px #ccc;
+  }
+  .body-field-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+  }
+  .actions {
+    margin-top: 10px;
+  }
+</style>
+<div class="container-fluid dashboard-content">
+  <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="page-header">
+              <h2 class="pageheader-title"></h2>
+              <div class="page-breadcrumb">
+                  <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="<%= web_root_path %>" class="breadcrumb-link">Dashboard</a></li>
+                          <li class="breadcrumb-item"><a href="<%= web_custom_notifications_path %>" class="breadcrumb-link">Notificações</a></li>
+                          <li class="breadcrumb-item active" aria-current="page">Ver</li>
+                      </ol>
+                  </nav>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card">
+        <h5 class="card-header">Ver</h5>
+        <div class="card-body">
+          <p id="notice"><%= notice %></p>
+
+          <div class="row">
+            <div class="col-md-6">
+              <p>
+                <strong>PUSH Título:</strong><br />
+                <%= @custom_notification.push_title %>
+              </p>
+
+              <p>
+                <strong>PUSH message:</strong><br />
+                <%= @custom_notification.push_message %>
+              </p>
+
+              <p>
+                <strong>Título:</strong><br />
+                <%= @custom_notification.title %>
+              </p>
+
+              <p>
+                <strong>Link Título:</strong><br />
+                <%= @custom_notification.action_title %>
+              </p>
+
+              <p>
+                <strong>Link URL:</strong><br />
+                <%= @custom_notification.action_link %>
+              </p>
+              <div class="actions text-right">
+                <%= form_for @custom_notification, url: send_web_custom_notification_path(@custom_notification), method: :post do |f| %>
+                  <%= f.submit 'Enviar', :class => 'btn btn-space btn-primary' %>
+                <% end %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label style="display:block">Body (exibido no app)</label>
+              <div class="body-field-preview-container">
+                <div class="body-field-preview">
+                  <%= @custom_notification.body ? @custom_notification.body.html_safe : '' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

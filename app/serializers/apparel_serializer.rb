@@ -15,10 +15,10 @@
 #
 
 class ApparelSerializer < ActiveModel::Serializer
-  attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info
+  attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info, :already_rated
   attributes :likes, :deslikes, :matches, :last_month_likes, :last_month_deslikes, :last_month_matches
 
-  has_many :apparel_tags
+  has_many :apparel_tags, serializer: ApparelTagSerializer
   has_many :apparel_images
   has_one :apparel_property, serializer: ApparelPropertySerializer
 
@@ -28,5 +28,9 @@ class ApparelSerializer < ActiveModel::Serializer
     data = super
     data[:distance] = current_user.km_from_user(object.user) if current_user && current_user.id != object.user_id
     data
+  end
+
+  def already_rated
+    object.apparel_ratings.where(user: current_user).count > 0
   end
 end

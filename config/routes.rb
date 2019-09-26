@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   end
   resources :apparel_ratings, except: [:new, :edit]
   resources :property_groups, only: [:index]
+  resources :global_tags, only: [:show]
   resources :apparel_tags, except: [:new, :edit]
   resources :apparel_images, except: [:new, :edit]
   resources :apparels, except: [:new, :edit] do
@@ -25,14 +26,12 @@ Rails.application.routes.draw do
   end
 
   get 'apparels/apparels_by_user/:user_id', to: "apparels#apparels_by_user"
+  get 'apparels/apparels_by_tag/:tag_id', to: "apparels#apparels_by_tag"
 
   post 'users/update_image', to: "users#update_image"
   post 'users/register_device', to: "users#register_device"
   post 'users/unregister_device', to: "users#unregister_device"
   post 'users/agreed_to_terms', to: "users#agreed_to_terms"
-  get 'users/heat_users', to: "users#heat_users"
-  get 'users/heatmap', to: "users#heatmap"
-  get 'users/heatcount', to: "users#heatcount"
   
 
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
@@ -42,4 +41,23 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   mount Sidekiq::Web, at: '/sidekiq-dashboard'
+
+  namespace :web do
+    # devise_for :admins
+    devise_for :users
+
+    root to: "main#index"
+    get 'logout', to: "main#logout"
+
+    get 'users/heat_users', to: "users#heat_users"
+    get 'users/heatmap', to: "users#heatmap"
+    get 'users/heatcount', to: "users#heatcount"
+
+    resources :global_tags, except: [:show, :destroy]
+    resources :custom_notifications, except: [:edit, :update, :destroy] do
+      member do
+        post 'send', to: "custom_notifications#send_notification"
+      end
+    end
+  end
 end

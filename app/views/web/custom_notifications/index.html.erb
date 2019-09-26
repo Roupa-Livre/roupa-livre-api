@@ -1,0 +1,55 @@
+<div class="container-fluid dashboard-content">
+  <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="page-header">
+              <h2 class="pageheader-title"></h2>
+              <div class="page-breadcrumb">
+                  <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="<%= web_root_path %>" class="breadcrumb-link">Dashboard</a></li>
+                          <li class="breadcrumb-item active" aria-current="page">Notificações</li>
+                      </ol>
+                  </nav>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card">
+        <!-- <div class="card-header d-flex"></div> -->
+        <div class="card-body">
+            <p id="notice"><%= notice %></p>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>PUSH Título</th>
+                  <th>Título</th>
+                  <th>Enviada em</th>
+                  <th colspan="1"></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <% @custom_notifications.each do |custom_notification| %>
+                  <tr>
+                    <td><%= custom_notification.id %></td>
+                    <td><%= custom_notification.push_title %></td>
+                    <td><%= custom_notification.title %></td>
+                    <td><%= custom_notification.sent_at %></td>
+                    <td><%= link_to 'Abrir', web_custom_notification_path(custom_notification) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+
+            <br>
+
+            <%= link_to 'Criar nova Notificação', new_web_custom_notification_path %>
+        </div>
+    </div>
+
+    </div>
+  </div>
+</div>

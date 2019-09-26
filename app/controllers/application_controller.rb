@@ -1,5 +1,9 @@
-class ApplicationController < ActionController::API
-  include DeviseTokenAuth::Concerns::SetUserByToken
+class ApplicationController < ActionController::Base
+  protect_from_forgery with: :exception, if: :not_devise_token_api
+
+  def not_devise_token_api
+    params[:controller].split('/')[0] != 'devise_token_auth'
+  end
   
   before_action :configure_permitted_parameters, if: :devise_controller?
 
@@ -75,5 +79,9 @@ class ApplicationController < ActionController::API
         temp_image.close
         temp_image.unlink
       end
+    end
+
+    def after_sign_in_path_for(resource)
+      web_root_path
     end
 end

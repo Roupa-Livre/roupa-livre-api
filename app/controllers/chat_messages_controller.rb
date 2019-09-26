@@ -11,7 +11,7 @@
 #  type       :string           default("ChatMessage")
 #
 
-class ChatMessagesController < ApplicationController
+class ChatMessagesController < APIController
   before_action :authenticate_user!
   before_action :set_chat_message, only: [:show, :update, :destroy]
   before_action :set_new_chat_message, only: [:create]

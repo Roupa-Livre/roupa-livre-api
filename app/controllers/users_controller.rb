@@ -37,8 +37,8 @@
 
 require 'csv'
 
-class UsersController < ApplicationController
-  before_action :authenticate_user!, except: [:heatmap, :heat_users, :heatcount]
+class UsersController < APIController
+  before_action :authenticate_user!
 
   def register_device
     device = Device.find_or_create_by(user: current_user, 
@@ -55,25 +55,6 @@ class UsersController < ApplicationController
 
     render json: device
   end
-
-  def heatmap
-    @heat_users = params[:last_24hours].present? || params[:last_sign_in_at].present? ? list_heat_user : []
-    render template: "users/heatmap.html.erb"
-  end
-  def heat_users
-    render text: list_heat_user.to_map_csv.strip
-  end
-  def heatcount
-    render text: { count: list_heat_user.count }
-  end
-
-  def list_heat_user
-    filtered_users = User.where('lat >= -90 and lat <= 90').where('lng >= -180 and lng <= 180').where.not(lat: nil, lng: nil)
-    filtered_users = filtered_users.where('last_sign_in_at >= ?', (Time.now - 1.day)) if params[:last_24hours].present?
-    filtered_users = filtered_users.where('last_sign_in_at >= ?', params[:last_sign_in_at].to_time) if params[:last_sign_in_at].present?
-    filtered_users
-  end
-
 
   def unregister_device
     Device.where(user: current_user, 
