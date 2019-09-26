@@ -11,7 +11,7 @@
 #  deleted_at :datetime
 #
 
-class ApparelImagesController < ApplicationController
+class ApparelImagesController < APIController
   before_action :set_apparel_image, only: [:show, :update, :destroy]
 
   # GET /apparel_images

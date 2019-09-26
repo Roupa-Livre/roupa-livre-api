@@ -35,63 +35,27 @@
 #  address                :string
 #
 
-class AdminsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_admin, only: [:show, :update, :destroy]
+require 'csv'
 
-  # GET /admins
-  # GET /admins.json
-  def index
-    @admins = Admin.all
+class Web::UsersController < Web::ApplicationController
+  layout false
+  before_action :authenticate_admin!
 
-    render json: @admins
+  def heatmap
+    @heat_users = params[:last_24hours].present? || params[:last_sign_in_at].present? ? list_heat_user : []
+    render template: "web/users/heatmap.html.erb"
+  end
+  def heat_users
+    render text: list_heat_user.to_map_csv.strip
+  end
+  def heatcount
+    render text: { count: list_heat_user.count }
   end
 
-  # GET /admins/1
-  # GET /admins/1.json
-  def show
-    render json: @admin
+  def list_heat_user
+    filtered_users = User.where('lat >= -90 and lat <= 90').where('lng >= -180 and lng <= 180').where.not(lat: nil, lng: nil)
+    filtered_users = filtered_users.where('last_sign_in_at >= ?', (Time.now - 1.day)) if params[:last_24hours].present?
+    filtered_users = filtered_users.where('last_sign_in_at >= ?', params[:last_sign_in_at].to_time) if params[:last_sign_in_at].present?
+    filtered_users
   end
-
-  # POST /admins
-  # POST /admins.json
-  def create
-    @admin = Admin.new(admin_params)
-
-    if @admin.save
-      render json: @admin, status: :created, location: @admin
-    else
-      render json: @admin.errors, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /admins/1
-  # PATCH/PUT /admins/1.json
-  def update
-    @admin = Admin.find(params[:id])
-
-    if @admin.update(admin_params)
-      head :no_content
-    else
-      render json: @admin.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /admins/1
-  # DELETE /admins/1.json
-  def destroy
-    @admin.destroy
-
-    head :no_content
-  end
-
-  private
-
-    def set_admin
-      @admin = Admin.find(params[:id])
-    end
-
-    def admin_params
-      params[:admin]
-    end
 end

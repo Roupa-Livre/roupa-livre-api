@@ -14,7 +14,7 @@
 #  deleted_at  :datetime
 #
 
-class ApparelsController < ApplicationController
+class ApparelsController < APIController
   before_action :authenticate_user!, except: [:remove_reported, :apparels_by_user, :apparels_by_tag]
   # before_action :apparels_by_user, only: [:show]
   before_action :set_apparel, only: [:show, :update, :destroy, :like, :dislike, :report, :remove_reported]

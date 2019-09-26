@@ -32,9 +32,6 @@ Rails.application.routes.draw do
   post 'users/register_device', to: "users#register_device"
   post 'users/unregister_device', to: "users#unregister_device"
   post 'users/agreed_to_terms', to: "users#agreed_to_terms"
-  get 'users/heat_users', to: "users#heat_users"
-  get 'users/heatmap', to: "users#heatmap"
-  get 'users/heatcount', to: "users#heatcount"
   
 
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
@@ -44,4 +41,16 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   mount Sidekiq::Web, at: '/sidekiq-dashboard'
+
+  namespace :web do
+    # devise_for :admins
+    devise_for :users
+
+    root to: "main#index"
+    get 'logout', to: "main#logout"
+
+    get 'users/heat_users', to: "users#heat_users"
+    get 'users/heatmap', to: "users#heatmap"
+    get 'users/heatcount', to: "users#heatcount"
+  end
 end

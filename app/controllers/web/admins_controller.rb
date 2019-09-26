@@ -35,49 +35,63 @@
 #  address                :string
 #
 
-require 'csv'
-
-class UsersController < APIController
+class AdminsController < Web::ApplicationController
   before_action :authenticate_user!
+  before_action :set_admin, only: [:show, :update, :destroy]
 
-  def register_device
-    device = Device.find_or_create_by(user: current_user, 
-      provider: update_device_params[:provider], 
-      uid: update_device_params[:registration_id],
-      device_uid: update_device_params[:device_uid])
+  # GET /admins
+  # GET /admins.json
+  def index
+    @admins = Admin.all
 
-    if device
-      Device.where(user: current_user, 
-        provider: update_device_params[:provider], 
-        device_uid: update_device_params[:device_uid]).
-        where.not(uid: update_device_params[:registration_id]).destroy_all
-    end
-
-    render json: device
+    render json: @admins
   end
 
-  def unregister_device
-    Device.where(user: current_user, 
-        provider: update_device_params[:provider], 
-        device_uid: update_device_params[:device_uid]).destroy_all
-    
+  # GET /admins/1
+  # GET /admins/1.json
+  def show
+    render json: @admin
+  end
+
+  # POST /admins
+  # POST /admins.json
+  def create
+    @admin = Admin.new(admin_params)
+
+    if @admin.save
+      render json: @admin, status: :created, location: @admin
+    else
+      render json: @admin.errors, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH/PUT /admins/1
+  # PATCH/PUT /admins/1.json
+  def update
+    @admin = Admin.find(params[:id])
+
+    if @admin.update(admin_params)
+      head :no_content
+    else
+      render json: @admin.errors, status: :unprocessable_entity
+    end
+  end
+
+  # DELETE /admins/1
+  # DELETE /admins/1.json
+  def destroy
+    @admin.destroy
+
     head :no_content
   end
 
-  def agreed_to_terms
-    current_user.agreed = true
-    current_user.agreed_at = Time.new
-    
-    if current_user.save
-      render json: current_user
-    else
-      render json: current_user.errors, status: :unprocessable_entity
+  private
+
+    def set_admin
+      @admin = Admin.find(params[:id])
     end
-  end
 
-  protected
-
-    def update_device_params
-      params.permit(:registration_id, :provider, :device_uid)
+    def admin_params
+      params[:admin]
     end
 end
