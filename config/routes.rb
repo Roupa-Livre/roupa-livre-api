@@ -53,6 +53,11 @@ Rails.application.routes.draw do
     get 'users/heatmap', to: "users#heatmap"
     get 'users/heatcount', to: "users#heatcount"
 
-    resources :global_tags
+    resources :global_tags, except: [:show, :destroy]
+    resources :custom_notifications, except: [:edit, :update, :destroy] do
+      member do
+        post 'send', to: "custom_notifications#send_notification"
+      end
+    end
   end
 end

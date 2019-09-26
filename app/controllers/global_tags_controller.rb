@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: global_tags
+#
+#  id          :integer          not null, primary key
+#  name        :string
+#  description :string
+#  body        :text
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 class GlobalTagsController < APIController
   before_action :authenticate_user!
   before_action :set_global_tag, only: [:show]

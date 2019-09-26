@@ -18,15 +18,6 @@ class Web::GlobalTagsController < Web::ApplicationController
     end
   end
 
-  # GET /global_tags/1
-  # GET /global_tags/1.json
-  def show
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @global_tag }
-    end
-  end
-
   # GET /global_tags/new
   # GET /global_tags/new.json
   def new
