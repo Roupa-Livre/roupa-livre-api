@@ -1,32 +1,45 @@
-<head>
+
+<% content_for :head do %>
   <link href='http://fonts.googleapis.com/css?family=Open+Sans|Raleway' rel='stylesheet' type='text/css'>
   <style>
-    html, body, #map-canvas {
+    #map-container {
+      position: absolute;
+      width: 100%;
       height: 100%;
+    }
+    #map-container,
+    #map-canvas {
+      height: 100%;
+      width: 100%;
       margin: 0px;
       padding: 0px;
       font-family: 'Raleway', sans-serif;
-      z-index:1;
+      z-index: 100;
+      position: absolute;
     }
-  
+
     #draggable {
-      z-index:100; 
-      background-color: rgba(200,200,255,.7); 
-      width: 250px;
+      z-index: 10000;
+      background-color: rgba(200, 200, 255, .7);
+      width: 300px;
       padding: 20px;
-      position:absolute;
-      top:10px;
-      left:100px;
+      position: absolute;
+      top: 10px;
+      left: 100px;
       cursor: move;
       border: black 1px solid;
     }
 
-    #radius-label, #opacity-label, #max-label {
+    #radius-label,
+    #opacity-label,
+    #max-label {
       margin-top: 10px;
     }
 
-    #radius-slider, #opacity-slider, #max-slider {
-      width:250px;
+    #radius-slider,
+    #opacity-slider,
+    #max-slider {
+      width: 250px;
       margin-top: 10px;
     }
 
@@ -36,22 +49,44 @@
       margin-bottom: 10px;
     }
 
-    #radius-slider .ui-slider-handle, 
+    #radius-slider .ui-slider-handle,
     #opacity-slider .ui-slider-handle,
     #max-slider .ui-slider-handle {
-      cursor:pointer;
+      cursor: pointer;
     }
   </style>
-  
+
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+
+<% end %>
+<div id="map-container">
+  <!-- there goes the map -->
+  <div id="map-canvas"></div>
+
+  <!-- the draggable input and display controls -->
+  <div id="draggable">
+    <div id="radius-label">radius: 30</div>
+    <div id="radius-slider"></div>
+
+    <div id="opacity-label">opacity: 0.8</div>
+    <div id="opacity-slider"></div>
+
+    <!-- <div id="max-label">max: -</div>
+      <div id="max-slider"></div> -->
+  </div>
+</div>
+
+<!--
+https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
+http://www.html5rocks.com/en/tutorials/file/dndfiles/
+http://blog.teamtreehouse.com/reading-files-using-the-html5-filereader-api
+-->
+
+<% content_for :bottom do %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.2.0/papaparse.min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTUs5Sqzmb6UHZV3q2MQRlP9vh-FriDIw&v=3.exp&libraries=visualization"></script>
 
-  <script
-  src="https://code.jquery.com/jquery-2.2.4.min.js"
-  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-  crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+  <script src="/assets/vendor/jquery-ui/jquery-ui.min.js"></script>
 
   <script>
     var map, pointarray, heatmap;
@@ -59,14 +94,14 @@
 
     // http://stackoverflow.com/a/2901298/562440
     function numberWithCommas(x) {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     function getDataToLatLng(data) {
       if (data)
         console.log('loaded data', data.length);
       var list = [];
-      for(idx in data) {
+      for (idx in data) {
         var row = data[idx];
         var lat = row.lat;
         var lng = row.lng;
@@ -81,7 +116,7 @@
       // var file = evt.target.files[0];
 
       var data = <%= @heat_users.to_json.html_safe %>;
-      if (data && Array.isArray(data) && data.length > 0 ) {
+      if (data && Array.isArray(data) && data.length > 0) {
         loadHeatmap(getDataToLatLng(data));
       } else {
         Papa.parse("/web/users/heat_users", {
@@ -91,37 +126,39 @@
           // beforeFirstChunk: function(results) {
           //   return results.replace(/^.*\n/g,"");
           // },
-          complete: function(results) {
+          complete: function (results) {
             loadHeatmap(getDataToLatLng(results["data"]));
           }
         });
       }
     }
 
-    function inrange(min,number,max){
-      if ( !isNaN(number) && (number >= min) && (number <= max) ){
-          return true;
+    function inrange(min, number, max) {
+      if (!isNaN(number) && (number >= min) && (number <= max)) {
+        return true;
       } else {
-          return false;
+        return false;
       };
-  }
-    
+    }
+
     function initialize() {
+      console.log('initializing');
       var mapOptions = {
-      zoom: 4,
-      center: new google.maps.LatLng(-23.533773, -46.625290),
-      mapTypeId: google.maps.MapTypeId.SATTELITE
+        zoom: 4,
+        center: new google.maps.LatLng(-23.533773, -46.625290),
+        mapTypeId: google.maps.MapTypeId.SATTELITE
       };
 
       map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
 
-      setTimeout(function() {
+      setTimeout(function () {
+        console.log('startMap');
         startMap();
       }, 1000);
-      
+
     }
-    
+
     function loadHeatmap(csv) {
       // map = new google.maps.Map(document.getElementById('map-canvas'), {
       //   zoom: 4,
@@ -136,40 +173,40 @@
         opacity: $("#opacity-slider").slider("value")
       });
     }
-    
-    $(document).ready(function(){
+
+    $(document).ready(function () {
       // $("#csv-file").change(handleFileSelect);
-      
+
       google.maps.event.addDomListener(window, 'load', initialize);
-      
-      $(function() {
-        $( "#draggable" ).draggable();
+
+      $(function () {
+        $("#draggable").draggable();
       });
-      
-      $(function() {
-        $( "#radius-slider" ).slider({
+
+      $(function () {
+        $("#radius-slider").slider({
           orientation: "horizontal",
           range: "min",
           min: 1,
           max: 50,
           value: 30,
-          slide: function(event, ui) {
+          slide: function (event, ui) {
             $("#radius-label").html("radius: " + ui.value);
-            if(heatmap == null) return;
+            if (heatmap == null) return;
             heatmap.set('radius', ui.value);
           }
         });
 
-        $( "#opacity-slider" ).slider({
+        $("#opacity-slider").slider({
           orientation: "horizontal",
           range: "min",
           min: 0,
           max: 100,
           value: 80,
-          slide: function(event, ui) {
-            $("#opacity-label").html("opacity: " + ui.value/100);
-            if(heatmap == null) return;
-            heatmap.set('opacity', ui.value/100);
+          slide: function (event, ui) {
+            $("#opacity-label").html("opacity: " + ui.value / 100);
+            if (heatmap == null) return;
+            heatmap.set('opacity', ui.value / 100);
           }
         });
 
@@ -188,26 +225,4 @@
       });
     });
   </script>
-</head>
-<body>
-  <!-- there goes the map -->
-  <div id="map-canvas"> </div>
-
-  <!-- the draggable input and display controls -->
-  <div id="draggable">
-    <div id="radius-label">radius: 30</div>
-    <div id="radius-slider"></div>
-
-    <div id="opacity-label">opacity: 0.8</div>
-    <div id="opacity-slider"></div>
-
-    <!-- <div id="max-label">max: -</div>
-    <div id="max-slider"></div> -->
-  </div>
-</body>
-
-<!--
-https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
-http://www.html5rocks.com/en/tutorials/file/dndfiles/
-http://blog.teamtreehouse.com/reading-files-using-the-html5-filereader-api
--->
+<% end %>

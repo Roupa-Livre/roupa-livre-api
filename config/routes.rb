@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   end
   resources :apparel_ratings, except: [:new, :edit]
   resources :property_groups, only: [:index]
-  resources :global_tags, except: [:new, :edit]
+  resources :global_tags, only: [:show]
   resources :apparel_tags, except: [:new, :edit]
   resources :apparel_images, except: [:new, :edit]
   resources :apparels, except: [:new, :edit] do
@@ -52,5 +52,7 @@ Rails.application.routes.draw do
     get 'users/heat_users', to: "users#heat_users"
     get 'users/heatmap', to: "users#heatmap"
     get 'users/heatcount', to: "users#heatcount"
+
+    resources :global_tags
   end
 end

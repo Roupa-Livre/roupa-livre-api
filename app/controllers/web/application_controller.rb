@@ -1,4 +1,6 @@
 class Web::ApplicationController < ApplicationController
+  layout "admin"
+
   def authenticate_admin!
     authenticate_web_user!
     # puts "type:" + current_web_user.type

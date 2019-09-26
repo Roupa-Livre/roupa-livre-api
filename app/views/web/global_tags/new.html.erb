@@ -1,0 +1,52 @@
+<div class="container-fluid dashboard-content">
+  <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="page-header">
+              <h2 class="pageheader-title"></h2>
+              <div class="page-breadcrumb">
+                  <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="<%= web_root_path %>" class="breadcrumb-link">Dashboard</a></li>
+                          <li class="breadcrumb-item"><a href="<%= web_global_tags_path %>" class="breadcrumb-link">Tags</a></li>
+                          <li class="breadcrumb-item active" aria-current="page">Nova</li>
+                      </ol>
+                  </nav>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card">
+        <h5 class="card-header">Nova</h5>
+        <div class="card-body">
+          <%= render 'form' %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :bottom do %>
+  <script>
+    function debounce(func, wait, immediate) {
+      var timeout;
+      return function() {
+        var context = this, args = arguments;
+        var later = function() {
+          timeout = null;
+          if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+      };
+    };
+    $(document).ready(function() {
+      $('.body-field').keyup( debounce(function changePreview() { 
+        $('.body-field-preview').html($(this).val()); 
+      }, 250));
+    });
+  </script>
+<% end %>

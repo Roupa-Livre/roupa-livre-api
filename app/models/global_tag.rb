@@ -11,4 +11,5 @@
 #
 
 class GlobalTag < ActiveRecord::Base
+  has_many :apparel_tags
 end

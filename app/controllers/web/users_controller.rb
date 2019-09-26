@@ -38,7 +38,6 @@
 require 'csv'
 
 class Web::UsersController < Web::ApplicationController
-  layout false
   before_action :authenticate_admin!
 
   def heatmap

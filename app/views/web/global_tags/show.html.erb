@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @global_tag.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @global_tag.description %>
+</p>
+
+<p>
+  <strong>Body:</strong>
+  <%= @global_tag.body %>
+</p>
+
+<%= link_to 'Edit', edit_global_tag_path(@global_tag) %> |
+<%= link_to 'Back', web_global_tags_path %>
