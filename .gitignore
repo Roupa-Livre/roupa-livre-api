@@ -44,3 +44,5 @@ MIGRATION.md
 .env
 Procfile.dev
 dump.rdb
+dump-data.sql
+live-dump-*.sql
