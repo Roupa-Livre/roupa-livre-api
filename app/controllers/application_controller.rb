@@ -1,7 +1,11 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception, if: :not_devise_token_api
+  skip_before_action :verify_authenticity_token, if: :devise_token_api
 
   def not_devise_token_api
+    params[:controller].split('/')[0] != 'devise_token_auth'
+  end
+  def devise_token_api
     params[:controller].split('/')[0] != 'devise_token_auth'
   end
   
