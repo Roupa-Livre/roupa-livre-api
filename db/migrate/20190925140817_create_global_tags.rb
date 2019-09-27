@@ -11,7 +11,7 @@ class CreateGlobalTags < ActiveRecord::Migration
 
   def data
     ApparelTag.all.distinct(:name).each do |tag|
-      GlobalTag.create!(name: tag[:name].downcase)
+      GlobalTag.find_or_create_by!(name: tag[:name].downcase)
     end
   end
 end
