@@ -5,8 +5,6 @@ class RemoveNameFromApparelTag < ActiveRecord::Migration
   end
 
   def rollback
-    GlobalTag.find_each do |tag|
-      ApparelTag.where(global_tag_id: tag.id).update_all(name: tag.name)
-    end
+    ApparelTag.connection.update("update apparel_tags set name = global_tags.name from global_tags where global_tags.id = apparel_tags.global_tag_id")
   end
 end

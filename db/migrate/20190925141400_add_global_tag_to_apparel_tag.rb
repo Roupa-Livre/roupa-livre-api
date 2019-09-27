@@ -4,8 +4,6 @@ class AddGlobalTagToApparelTag < ActiveRecord::Migration
   end
   
   def data
-    GlobalTag.find_each do |tag|
-      ApparelTag.where(name: tag.name).update_all(global_tag_id: tag.id)
-    end
+    ApparelTag.connection.update("update apparel_tags set global_tag_id = global_tags.id from global_tags where global_tags.name = apparel_tags.name")
   end
 end
