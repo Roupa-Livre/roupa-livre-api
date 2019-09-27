@@ -37,10 +37,10 @@ set :puma_preload_app, false
 
 
 namespace :deploy do
-  # removes dev dependencies installed due to gemfile.lock
-  after :published, :clear_dev_dependencies do
-    run "rm -f #{release_path}/bin/spring"
-  end
+  # # removes dev dependencies installed due to gemfile.lock
+  # after :published, :clear_dev_dependencies do
+  #   run "rm -f #{release_path}/bin/spring"
+  # end
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       with rails_env: :production do
@@ -52,5 +52,9 @@ namespace :deploy do
       end
     end
   end
-
 end
+
+task :clear_dev_dependencies do
+  run "rm -f #{release_path}/bin/spring"
+end
+before "deploy:published", "clear_dev_dependencies"
