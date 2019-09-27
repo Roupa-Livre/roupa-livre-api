@@ -4,6 +4,6 @@ class AddGlobalTagToApparelTag < ActiveRecord::Migration
   end
   
   def data
-    ApparelTag.connection.update("update apparel_tags set global_tag_id = global_tags.id from global_tags where global_tags.name = apparel_tags.name")
+    ApparelTag.connection.update("update apparel_tags set global_tag_id = global_tags.id from global_tags where lower(global_tags.name) = lower(apparel_tags.name)")
   end
 end
