@@ -71,7 +71,7 @@ gem 'puma'
 
 group :development do
   gem 'annotate', '>=2.6.0'
-  gem 'spring'
+  gem 'spring', '>=1.5.0'
   gem 'letter_opener'
 
   gem 'capistrano', '3.4.0'

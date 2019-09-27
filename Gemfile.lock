@@ -324,7 +324,7 @@ DEPENDENCIES
   sidekiq (~> 3.2.6)
   sinatra
   slim
-  spring
+  spring (>= 1.5.0)
   sprockets (~> 3.7.2)
   tzinfo-data
   wet-health_endpoint
