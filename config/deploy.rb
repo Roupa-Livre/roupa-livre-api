@@ -55,6 +55,6 @@ namespace :deploy do
 end
 
 task :clear_dev_dependencies do
-  run "rm -f #{release_path}/bin/spring"
+  execute :rm, "-f #{release_path}/bin/spring"
 end
-before "deploy:published", "clear_dev_dependencies"
+after "deploy:published", "clear_dev_dependencies"
