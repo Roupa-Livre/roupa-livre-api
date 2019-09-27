@@ -10,7 +10,7 @@ class CreateGlobalTags < ActiveRecord::Migration
   end
 
   def data
-    ApparelTag.all.distinct(:name).each do |tag|
+    ApparelTag.with_deleted.distinct(:name).each do |tag|
       GlobalTag.find_or_create_by!(name: tag[:name].downcase)
     end
   end
