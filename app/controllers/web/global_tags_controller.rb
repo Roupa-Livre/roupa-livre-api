@@ -12,6 +12,11 @@ class Web::GlobalTagsController < Web::ApplicationController
       @global_tags = GlobalTag.where("(description is not null and description <> '') or (body is not null and body <> '')")
     end
 
+    @global_tags = @global_tags
+      .joins('left join apparel_tags on apparel_tags.global_tag_id = global_tags.id')
+      .group(GlobalTag.column_names.map{|col| "global_tags.#{col}"})
+      .order('COUNT(apparel_tags.id) DESC')
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @global_tags }
