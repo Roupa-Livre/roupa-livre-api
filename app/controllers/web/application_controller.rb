@@ -1,5 +1,6 @@
 class Web::ApplicationController < ApplicationController
   layout "admin"
+  # respond_to :html, :json
 
   def authenticate_admin!
     authenticate_web_user!
