@@ -13,7 +13,7 @@ set :keep_releases, 5
 set :rvm_type, :user
 set :rvm_ruby_version, '2.2.4' # Edit this if you are using MRI Ruby
 
-set :bundle_flags, '--quiet'
+# set :bundle_flags, '--quiet'
 
 set :puma_rackup, -> { File.join(current_path, 'config.ru') }
 set :puma_state, "#{shared_path}/tmp/pids/puma.state"
@@ -39,13 +39,7 @@ set :puma_preload_app, false
 namespace :deploy do
   # removes dev dependencies installed due to gemfile.lock
   after :published, :clear_dev_dependencies do
-    on roles(:web), in: :groups, limit: 3, wait: 10 do
-      with rails_env: :production do
-        within release_path do
-          run "rm ./bin/spring"
-        end
-      end
-    end
+    run "rm -f #{release_path}/bin/spring"
   end
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
