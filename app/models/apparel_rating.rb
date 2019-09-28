@@ -19,7 +19,7 @@ class ApparelRating < ActiveRecord::Base
   validates_presence_of :user, :apparel
   validates_uniqueness_of :user, :scope => :apparel
 
-  after_create :check_or_create_chat
+  after_save :check_or_create_chat
 
   def linked_chat
     owner_user = self.user

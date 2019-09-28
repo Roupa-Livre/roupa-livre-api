@@ -100,11 +100,12 @@ class ApparelsController < APIController
     show_not_liked_again = params[:show_not_liked_again].present? && to_boolean(params[:show_not_liked_again])
     if show_liked_again != show_not_liked_again
       if show_liked_again
-        @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user, liked: true).select(:apparel_id))
+        @apparels = @apparels.where(:id => ApparelRating.where(user: current_user, liked: true).select(:apparel_id))
       else
-        @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user, liked: false).select(:apparel_id))
+        @apparels = @apparels.where(:id => ApparelRating.where(user: current_user, liked: false).select(:apparel_id))
       end
     elsif !show_liked_again && !show_not_liked_again
+      # caso nao tenha filtros deve esconder os apparels que ja foram rated por padrao
       @apparels = @apparels.where.not(:id => ApparelRating.where(user: current_user).select(:apparel_id))
     end
 
