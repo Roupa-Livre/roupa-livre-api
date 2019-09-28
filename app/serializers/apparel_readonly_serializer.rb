@@ -15,7 +15,7 @@
 #
 
 class ApparelReadonlySerializer < ActiveModel::Serializer
-  attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info, :already_rated
+  attributes :id, :user_id, :title, :description, :size_info, :gender, :age_info, :rating
 
   has_many :apparel_tags
   has_many :apparel_images
@@ -29,7 +29,7 @@ class ApparelReadonlySerializer < ActiveModel::Serializer
     data
   end
 
-  def already_rated
-    object.apparel_ratings.where(user: current_user).count > 0
+  def rating
+    object.apparel_ratings.where(user: current_user).first
   end
 end
