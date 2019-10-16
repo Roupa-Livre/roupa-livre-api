@@ -32,7 +32,7 @@ Rails.application.routes.draw do
   post 'users/register_device', to: "users#register_device"
   post 'users/unregister_device', to: "users#unregister_device"
   post 'users/agreed_to_terms', to: "users#agreed_to_terms"
-  
+  post 'users/reset_password', to: "users#reset_password"
 
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
     registrations: 'overrides/registrations',

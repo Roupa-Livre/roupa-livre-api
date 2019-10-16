@@ -54,3 +54,34 @@ sudo du -a / | sort -n -r | head -n 5
 sudo find / -type f -exec du -Sh {} + | sort -rh | head -n 5
 
 ```
+
+# Para salvar o log #
+
+1 - On Server
+```
+mkdir "logs-$(date +"%Y-%m-%d")"
+cd "logs-$(date +"%Y-%m-%d")"
+
+cp /home/deploy-roupalivre/roupa-livre-api/shared/log/* ./ -R
+cd ..
+tar -czvf "logs-$(date +"%Y-%m-%d").tar.gz" ./"logs-$(date +"%Y-%m-%d")"
+```
+
+2 - Locally
+```
+scp -i ../keys/amazon-roupa-livre-main.pem ubuntu@54.233.232.60:/home/ubuntu/"logs-$(date +"%Y-%m-%d").tar.gz" ./log/"logs-$(date +"%Y-%m-%d").tar.gz"
+```
+
+3 - Back on Server
+```
+sudo rm /home/deploy-roupalivre/roupa-livre-api/shared/log/*.log -f
+rm -rf "logs-$(date +"%Y-%m-%d")"
+rm "logs-$(date +"%Y-%m-%d").tar.gz"
+
+sudo kill -9 $(sudo lsof | grep deleted | grep shared/log | sed -r 's/[^ ]* ([0-9]*).*/\1/g' | sed '/^$/d' | uniq)
+```
+
+4 - Locally (to restart server)
+```
+cap production deploy
+```

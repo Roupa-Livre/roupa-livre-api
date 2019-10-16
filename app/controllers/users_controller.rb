@@ -38,7 +38,7 @@
 require 'csv'
 
 class UsersController < APIController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:reset_password]
 
   def register_device
     device = Device.find_or_create_by(user: current_user, 
@@ -72,6 +72,27 @@ class UsersController < APIController
       render json: current_user
     else
       render json: current_user.errors, status: :unprocessable_entity
+    end
+  end
+
+  def reset_password
+    if params[:email]
+      user = User.find_by(email: params[:email])
+      if user
+        pass = (0...8).map { (65 + rand(26)).chr }.join
+        user.password = pass
+        user.password_confirmation = pass
+        if user.save
+          UserMailer.reset_password(user.name, user.email, user.password).deliver
+          render json: current_user
+        else
+          render json: user.errors, status: :unprocessable_entity
+        end
+      else
+        render status: :unprocessable_entity
+      end
+    else
+      render status: :unprocessable_entity
     end
   end
 
