@@ -9,6 +9,11 @@ module Overrides
     end
 
     def assign_provider_attrs(user, auth_hash)
+      if user.social_image != auth_hash.info.image && !user.new_record?
+        user.social_image = auth_hash.info.image
+        user.save
+      end
+      
       user.assign_attributes({
         name: auth_hash.info.name, 
         nickname: auth_hash.info.nickname,
