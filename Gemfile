@@ -46,6 +46,7 @@ gem 'slim'
 gem "aws-ses", "~> 0.6.0", :require => 'aws/ses'
 
 gem 'rollbar', '~> 2.12.0'
+gem 'wet-health_endpoint'
 
 group :database do
   group :postgresql do
