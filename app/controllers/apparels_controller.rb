@@ -213,7 +213,8 @@ class ApparelsController < APIController
   # DELETE /apparels/1
   # DELETE /apparels/1.json
   def destroy
-    @apparel.really_destroy!
+    # @apparel.really_destroy!
+    @apparel.destroy
 
     head :no_content
   end
